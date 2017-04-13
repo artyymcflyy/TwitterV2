@@ -26,6 +26,10 @@ class TweetsViewController: UIViewController {
         })
         // Do any additional setup after loading the view.
     }
+    
+    @IBAction func onLogout(_ sender: UIBarButtonItem) {
+        TwitterClient.sharedInstance?.logout()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
