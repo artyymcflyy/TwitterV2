@@ -80,6 +80,7 @@ class TwitterClient: BDBOAuth1SessionManager {
             let userDictionary = response as! NSDictionary
             
             let user = User(dictionary: userDictionary)
+            
             success(user)
             
         }, failure: { (task:URLSessionDataTask?, error:Error) in
