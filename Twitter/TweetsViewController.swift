@@ -8,27 +8,55 @@
 
 import UIKit
 
-class TweetsViewController: UIViewController {
+class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     
+    @IBOutlet var tableView: UITableView!
     var tweets: [Tweet]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 100
+        
         
         TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets:[Tweet]) in
             self.tweets = tweets
+            self.tableView.reloadData()
             
-            for tweet in tweets{
-                print(tweet.text!)
-            }
-        }, failure: { (error:NSError) in
-            
-        })
+        }, failure: { (error:NSError) in})
         // Do any additional setup after loading the view.
     }
     
     @IBAction func onLogout(_ sender: UIBarButtonItem) {
         TwitterClient.sharedInstance?.logout()
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tweets != nil{
+            return tweets.count
+        }else{
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell") as! TweetCell
+        cell.retweetedView.removeFromSuperview()
+        let tweet = tweets[indexPath.row]
+        
+        cell.nameLabel.text = tweet.name
+        cell.usernameLabel.text = tweet.screenname
+        cell.tweetLabel.text = tweet.text
+        return cell
     }
 
     override func didReceiveMemoryWarning() {
