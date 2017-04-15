@@ -56,6 +56,11 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         cell.nameLabel.text = tweet.name
         cell.usernameLabel.text = tweet.screenname
         cell.tweetLabel.text = tweet.text
+        
+        if tweet.profileImageUrl != nil{
+            cell.getImageFromURL(url: tweet.profileImageUrl!)
+        }
+        
         return cell
     }
 
@@ -69,16 +74,17 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "newTweetModal"{
+            
+        }
+        if segue.identifier == "tweetDetail"{
+            let vc = segue.destination as! TweetDetailViewController
+            let cell = sender as! TweetCell
+            let indexPath = tableView.indexPath(for: cell)
         
-        let vc = segue.destination as! TweetDetailViewController
-        let cell = sender as! TweetCell
-        let indexPath = tableView.indexPath(for: cell)
+            vc.tweet = tweets[(indexPath?.row)!]
         
-        vc.tweet = tweets[(indexPath?.row)!]
-        
-        
+        }
     }
 
 }

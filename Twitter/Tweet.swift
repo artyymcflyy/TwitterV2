@@ -13,6 +13,7 @@ class Tweet: NSObject {
     var text: String?
     var name: String?
     var screenname: String?
+    var profileImageUrl: URL?
     var timestamp: Date?
     var retweetCount: Int = 0
     var favoritesCount: Int  = 0
@@ -23,7 +24,10 @@ class Tweet: NSObject {
         name  = user["name"] as? String
         screenname = "@\(user["screen_name"] ?? "")"
         text = dictionary["text"] as? String
-        
+        let profileImageString = user["profile_image_url"] as? String
+        if let profileImageString = profileImageString{
+            profileImageUrl = URL(string: profileImageString)
+        }
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
         favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
         

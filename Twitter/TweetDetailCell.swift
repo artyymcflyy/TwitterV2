@@ -10,6 +10,8 @@ import UIKit
 
 class TweetDetailCell: UITableViewCell {
     
+    @IBOutlet var retweetedView: UIView!
+    @IBOutlet var profileImageView: UIImageView!
     @IBOutlet var favoritesLabel: UILabel!
     @IBOutlet var retweetsLabel: UILabel!
     @IBOutlet var timestamplabel: UILabel!
@@ -20,6 +22,10 @@ class TweetDetailCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+    }
+    
+    func getImageFromURL(url: URL){
+        profileImageView.setImageWith(url)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

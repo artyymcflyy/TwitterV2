@@ -18,6 +18,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.dataSource = self
         tableView.delegate = self
         
+        
         // Do any additional setup after loading the view.
     }
     
@@ -27,9 +28,18 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetDetailCell") as! TweetDetailCell
-        
+        cell.retweetedView.removeFromSuperview()
         cell.nameLabel.text = tweet?.name
         cell.usernameLabel.text = tweet?.screenname
+        if tweet?.profileImageUrl != nil{
+            cell.getImageFromURL(url: (tweet?.profileImageUrl)!)
+        }
+        cell.tweetLabel.text = tweet?.text
+        
+        let retweetInt = tweet?.retweetCount ?? 0
+        let favoritesInt = tweet?.favoritesCount ?? 0
+        cell.retweetsLabel.text = "\(retweetInt)"
+        cell.favoritesLabel.text = "\(favoritesInt)"
         
         return cell
     }

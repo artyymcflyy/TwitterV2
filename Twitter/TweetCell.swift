@@ -16,9 +16,14 @@ class TweetCell: UITableViewCell {
     @IBOutlet var profileImageView: UIImageView!
     @IBOutlet var tweetLabel: UILabel!
     @IBOutlet var retweetedView: UIView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+    }
+    
+    func getImageFromURL(url: URL){
+        profileImageView.setImageWith(url)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
