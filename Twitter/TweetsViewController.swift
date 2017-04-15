@@ -56,6 +56,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         cell.nameLabel.text = tweet.name
         cell.usernameLabel.text = tweet.screenname
         cell.tweetLabel.text = tweet.text
+        cell.timestampLabel.text = tweet.currTimeStamp
         
         if tweet.profileImageUrl != nil{
             cell.getImageFromURL(url: tweet.profileImageUrl!)

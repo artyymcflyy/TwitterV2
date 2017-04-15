@@ -38,11 +38,11 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             cell.getImageFromURL(url: (tweet?.profileImageUrl)!)
         }
         cell.tweetLabel.text = tweet?.text
-//        
-//        let retweetInt = tweet?.retweetCount ?? 0
-//        let favoritesInt = tweet?.favoritesCount ?? 0
-//        cell.retweetsLabel.text = "\(retweetInt)"
-//        cell.favoritesLabel.text = "\(favoritesInt)"
+        cell.timestamplabel.text = tweet?.detailTimeStamp
+        let retweetInt = tweet?.retweetCount ?? 0
+        let favoritesInt = tweet?.favoritesCount ?? 0
+        cell.retweetsLabel.text = "\(retweetInt)"
+        cell.favoritesLabel.text = "\(favoritesInt)"
         
         return cell
     }

@@ -16,6 +16,7 @@ class TweetCell: UITableViewCell {
     @IBOutlet var profileImageView: UIImageView!
     @IBOutlet var tweetLabel: UILabel!
     @IBOutlet var retweetedView: UIView!
+    @IBOutlet var timeStamp: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
