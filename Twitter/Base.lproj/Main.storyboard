@@ -81,31 +81,28 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dK4-ON-QY6">
                                                     <rect key="frame" x="32" y="8" width="335" height="23"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uso-4v-MHi">
-                                                            <rect key="frame" x="8" y="4" width="28" height="15"/>
-                                                            <color key="backgroundColor" red="0.19416919730000001" green="0.88490676199999996" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="15" id="ds5-Lg-nvK"/>
-                                                                <constraint firstAttribute="width" constant="28" id="jEx-x7-cd3"/>
-                                                            </constraints>
-                                                        </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username retweeted" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="evJ-cM-MKc">
                                                             <rect key="frame" x="48" y="1" width="279" height="21"/>
-                                                            <color key="backgroundColor" red="0.050980392159999999" green="0.24313725489999999" blue="0.85882352939999995" alpha="1" colorSpace="calibratedRGB"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="retweet" translatesAutoresizingMaskIntoConstraints="NO" id="uso-4v-MHi">
+                                                            <rect key="frame" x="13" y="-2" width="27" height="27"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="27" id="ds5-Lg-nvK"/>
+                                                                <constraint firstAttribute="width" constant="27" id="jEx-x7-cd3"/>
+                                                            </constraints>
+                                                        </imageView>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.90997409330000001" green="0.1169603718" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="evJ-cM-MKc" secondAttribute="bottom" constant="1" id="00G-1h-unJ"/>
                                                         <constraint firstItem="evJ-cM-MKc" firstAttribute="top" secondItem="dK4-ON-QY6" secondAttribute="top" constant="1" id="1nD-HX-co7"/>
                                                         <constraint firstAttribute="trailing" secondItem="evJ-cM-MKc" secondAttribute="trailing" constant="8" id="3Gn-ex-7ql"/>
-                                                        <constraint firstItem="uso-4v-MHi" firstAttribute="leading" secondItem="dK4-ON-QY6" secondAttribute="leading" constant="8" id="FVe-5T-bcG"/>
-                                                        <constraint firstItem="evJ-cM-MKc" firstAttribute="leading" secondItem="uso-4v-MHi" secondAttribute="trailing" constant="12" id="fdo-Vi-jz9"/>
-                                                        <constraint firstAttribute="bottom" secondItem="uso-4v-MHi" secondAttribute="bottom" constant="4" id="yLQ-cW-2bK"/>
-                                                        <constraint firstItem="uso-4v-MHi" firstAttribute="top" secondItem="dK4-ON-QY6" secondAttribute="top" constant="4" id="zRT-pS-9Mz"/>
+                                                        <constraint firstItem="uso-4v-MHi" firstAttribute="leading" secondItem="dK4-ON-QY6" secondAttribute="leading" constant="13" id="FVe-5T-bcG"/>
+                                                        <constraint firstItem="evJ-cM-MKc" firstAttribute="leading" secondItem="uso-4v-MHi" secondAttribute="trailing" constant="8" id="fdo-Vi-jz9"/>
+                                                        <constraint firstAttribute="bottom" secondItem="uso-4v-MHi" secondAttribute="bottom" constant="-2" id="yLQ-cW-2bK"/>
+                                                        <constraint firstItem="uso-4v-MHi" firstAttribute="top" secondItem="dK4-ON-QY6" secondAttribute="top" constant="-2" id="zRT-pS-9Mz"/>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wfW-P7-kSk">
