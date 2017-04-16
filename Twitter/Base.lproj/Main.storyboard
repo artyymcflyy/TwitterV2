@@ -274,6 +274,9 @@
                                         </view>
                                         <barButtonItem key="rightBarButtonItem" title="Tweet" id="wSv-bv-35r">
                                             <color key="tintColor" red="0.1137254902" green="0.63137254899999995" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                            <connections>
+                                                <action selector="tweetButtonTapped:" destination="zVV-Ho-8fg" id="fKq-U2-02a"/>
+                                            </connections>
                                         </barButtonItem>
                                     </navigationItem>
                                 </items>

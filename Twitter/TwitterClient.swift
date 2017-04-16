@@ -60,7 +60,19 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func homeTimeLine(success: @escaping ([Tweet])->(), failure: (NSError)->()){
+    func updateStatus(status: String, replyID: String, success:@escaping (Tweet)->(), failure: (Error)->()){
+        post("/1.1/statuses/update.json", parameters: ["status": status], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
+            let dictionary = response as! NSDictionary
+            let tweet = Tweet(dictionary: dictionary)
+            
+            success(tweet)
+            
+        }, failure:{ (task:URLSessionDataTask?, error:Error) in
+            print("error \(error.localizedDescription)")
+        })
+    }
+    
+    func homeTimeLine(success: @escaping ([Tweet])->(), failure: (Error)->()){
         
         get("/1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
             let dictionaries = response as! [NSDictionary]
@@ -70,7 +82,7 @@ class TwitterClient: BDBOAuth1SessionManager {
             
         }, failure: { (task:URLSessionDataTask?, error:Error) in
             print("error \(error.localizedDescription)")
-            self.loginFailure?(error as NSError)
+            self.loginFailure?(error)
         })
     }
     

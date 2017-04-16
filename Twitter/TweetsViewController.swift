@@ -8,27 +8,42 @@
 
 import UIKit
 
-class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
+class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NewTweetViewControllerDelegate{
     
     @IBOutlet var tableView: UITableView!
     var tweets: [Tweet]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        let ntd = NewTweetViewController()
+        ntd.delegate = self
+        
         tableView.dataSource = self
         tableView.delegate = self
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
         
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshAction(_:)), for: .valueChanged)
+        tableView.insertSubview(refreshControl, at: 0)
         
         TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets:[Tweet]) in
             self.tweets = tweets
             self.tableView.reloadData()
             
-        }, failure: { (error:NSError) in})
-        // Do any additional setup after loading the view.
+        }, failure: { (error:Error) in})
+        
+    }
+    
+    func refreshAction(_ refreshControl: UIRefreshControl){
+        TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets:[Tweet]) in
+            self.tweets = tweets
+            self.tableView.reloadData()
+            refreshControl.endRefreshing()
+        }, failure: { (error:Error) in
+        })
     }
     
     @IBAction func onLogout(_ sender: UIBarButtonItem) {
@@ -45,7 +60,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        //performSegue(withIdentifier: "TweetDetail", sender: self)
+        //performSegue(withIdentifiezr: "TweetDetail", sender: self)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -64,6 +79,11 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         
         return cell
     }
+    
+    func newTweetViewController(NewTweetViewController: NewTweetViewController, didGetValue value: Tweet) {
+        tweets.insert(value, at: 0)
+        tableView.reloadData()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -75,6 +95,10 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "newTweetModal"{
+            let ntvc = segue.destination as! NewTweetViewController
+            ntvc.delegate = self
+        }
         if segue.identifier == "TweetDetail"{
             let vc = segue.destination as! TweetDetailViewController
             let cell = sender as! TweetCell

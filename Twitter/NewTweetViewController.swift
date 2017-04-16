@@ -8,6 +8,10 @@
 
 import UIKit
 
+@objc protocol NewTweetViewControllerDelegate {
+    @objc optional func newTweetViewController(NewTweetViewController:NewTweetViewController, didGetValue value: Tweet)
+}
+
 class NewTweetViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet var characterCount: UILabel!
@@ -17,6 +21,7 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
     @IBOutlet var userProfileImageView: UIImageView!
     var count = 0
     var tweetText = ""
+    var delegate: NewTweetViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,9 +36,9 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
         }
         tweetTextArea.text = ""
         
+        tweetTextArea.becomeFirstResponder()
+        
     }
-    
-
     
     func textViewDidChange(_ textView: UITextView) {
         count = textView.text.characters.count
@@ -45,6 +50,17 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
             textView.text = tweetText
         }
     }
+    
+    @IBAction func tweetButtonTapped(_ sender: UIBarButtonItem) {
+        TwitterClient.sharedInstance?.updateStatus(status: tweetText, replyID: "", success: { (myTweet:Tweet) in
+            self.dismiss(animated: true, completion: { 
+                self.delegate?.newTweetViewController!(NewTweetViewController: self, didGetValue: myTweet)
+            })
+        }, failure: { (error:Error) in
+            print("\(error.localizedDescription)")
+        })
+    }
+    
     @IBAction func onCancelTap(_ sender: UIBarButtonItem) {
        dismiss(animated: true, completion: nil)
     }
