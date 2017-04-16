@@ -414,7 +414,6 @@
                                             </constraints>
                                             <state key="normal" title="Button" image="reply"/>
                                             <connections>
-                                                <action selector="replyButtonTapped:" destination="jZx-C9-QNF" eventType="touchUpInside" id="LOe-2A-cv5"/>
                                                 <segue destination="zVV-Ho-8fg" kind="presentation" identifier="replyTweetModal" id="D25-lx-zDf"/>
                                             </connections>
                                         </button>

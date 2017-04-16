@@ -88,6 +88,36 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func favoritedTweet(isCurrentlyFavorited: Bool, tweetID: String,success:@escaping (Bool)->(), failure:(Error)->()){
+        let resource = isCurrentlyFavorited ? "destroy" : "create"
+        
+        post("/1.1/favorites/"+resource+".json", parameters: ["id":tweetID], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
+            let dictionary = response as! NSDictionary
+            let favorited = dictionary["favorited"] as! Bool
+            
+            success(favorited)
+            
+        }) { (task:URLSessionDataTask?, error:Error) in
+            print("error \(error.localizedDescription )")
+        }
+    }
+    
+    func retweetTweet(isCurrentlyRetweeted: Bool, tweetID: String,success:@escaping (Bool)->(), failure:(Error)->()){
+        let resource = isCurrentlyRetweeted ? "unretweet" : "retweet"
+        post("/1.1/statuses/"+resource+"/"+tweetID+".json", parameters: ["id":tweetID], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
+            let dictionary = response as! NSDictionary
+            var retweeted = dictionary["retweeted"] as! Bool
+            
+            if dictionary["retweeted_status"] == nil{
+                retweeted = false
+            }
+            success(retweeted)
+            
+        }) { (task:URLSessionDataTask?, error:Error) in
+            print("error \(error.localizedDescription )")
+        }
+    }
+    
     func currentAccount(success:@escaping (User)->(), failure:@escaping (Error)->()){
         get("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response: Any?) in
             

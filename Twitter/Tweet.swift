@@ -18,6 +18,8 @@ class Tweet: NSObject {
     var currTimeStamp: String?
     var detailTimeStamp: String?
     var tweet_id: String?
+    var retweeted: Bool?
+    var favorited: Bool?
     var retweetCount: Int = 0
     var favoritesCount: Int  = 0
     let currTime = Date()
@@ -37,8 +39,12 @@ class Tweet: NSObject {
             profileImageUrl = URL(string: profileImageString)
         }
         tweet_id = dictionary["id_str"] as? String
+        
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
-        favoritesCount = (user["favourites_count"] as? Int) ?? 0
+        retweeted = dictionary["retweeted"] as? Bool
+        
+        favoritesCount = (dictionary["favorite_count"] as? Int) ?? 0
+        favorited = dictionary["favorited"] as? Bool
         
         let timestampString = dictionary["created_at"] as? String
         
