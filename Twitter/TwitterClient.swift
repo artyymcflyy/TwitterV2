@@ -107,7 +107,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         post("/1.1/statuses/"+resource+"/"+tweetID+".json", parameters: ["id":tweetID], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
             let dictionary = response as! NSDictionary
             var retweeted = dictionary["retweeted"] as! Bool
-            
+            print(dictionary)
             if dictionary["retweeted_status"] == nil{
                 retweeted = false
             }

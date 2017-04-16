@@ -93,6 +93,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         cell.usernameLabel.text = tweet.screenname
         cell.tweetLabel.text = tweet.text
         cell.timestampLabel.text = tweet.currTimeStamp
+        cell.retweetCountLabel.text = "\(tweet.retweetCount)"
+        cell.favoriteCountLabel.text = "\(tweet.favoritesCount)"
         
         if tweet.profileImageUrl != nil{
             cell.getImageFromURL(url: tweet.profileImageUrl!)
