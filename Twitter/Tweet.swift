@@ -48,21 +48,25 @@ class Tweet: NSObject {
         }
         
         rawTime = Int(currTime.timeIntervalSince(timestamp!))
+        print(rawTime)
         minutes = rawTime/60
         hours = rawTime/3600
         days = rawTime/86400
         
         if rawTime < 60{
             currTimeStamp = "\(rawTime)s"
-        }else if rawTime >= 60{
+        }
+        if rawTime >= 60{
             if rawTime < 3600{
                currTimeStamp = "\(minutes)m"
             }
-        }else if rawTime >= 3600{
+        }
+        if rawTime >= 3600{
             if rawTime < 86400{
                 currTimeStamp = "\(hours)h"
             }
-        }else{
+        }
+        if rawTime >= 86400{
             currTimeStamp = timestamp?.description
         }
 

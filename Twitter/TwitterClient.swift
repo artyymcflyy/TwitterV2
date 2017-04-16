@@ -15,6 +15,7 @@ class TwitterClient: BDBOAuth1SessionManager {
     
     var loginSuccess: (() -> ())?
     var loginFailure: ((Error) -> ())?
+    var tweetTimelineCount = 20
     
     func login(success: @escaping ()->(), faliure: @escaping (Error)->()){
         loginSuccess = success
@@ -74,9 +75,10 @@ class TwitterClient: BDBOAuth1SessionManager {
     
     func homeTimeLine(success: @escaping ([Tweet])->(), failure: (Error)->()){
         
-        get("/1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
+        get("/1.1/statuses/home_timeline.json", parameters: ["count":"\(tweetTimelineCount)"], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
             let dictionaries = response as! [NSDictionary]
             let tweets = Tweet.tweetsInArray(dictionaries: dictionaries)
+            self.tweetTimelineCount += 20
             
             success(tweets)
             

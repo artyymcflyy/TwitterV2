@@ -8,10 +8,11 @@
 
 import UIKit
 
-class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NewTweetViewControllerDelegate{
+class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NewTweetViewControllerDelegate, UIScrollViewDelegate{
     
     @IBOutlet var tableView: UITableView!
     var tweets: [Tweet]!
+    var isMoreDataLoading = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +45,26 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             refreshControl.endRefreshing()
         }, failure: { (error:Error) in
         })
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (!isMoreDataLoading) {
+            let scrollViewContentHeight = tableView.contentSize.height
+            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+            
+            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.isDragging) {
+                
+                isMoreDataLoading = true
+                
+                TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets:[Tweet]) in
+                    self.tweets = tweets
+                    self.isMoreDataLoading = false
+                    self.tableView.reloadData()
+                }, failure: { (error:Error) in
+                })
+            }
+        }
+        
     }
     
     @IBAction func onLogout(_ sender: UIBarButtonItem) {
