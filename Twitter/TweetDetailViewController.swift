@@ -11,6 +11,11 @@ import UIKit
 class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var favoriteButtonIcon: UIButton!
+    @IBOutlet var retweetButtonIcon: UIButton!
+    
+    var retweetIsSelected = false
+    var favoriteIsSelected = false
     var tweet: Tweet?
     
     override func viewDidLoad() {
@@ -20,6 +25,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
+        
         
         // Do any additional setup after loading the view.
     }
@@ -49,6 +55,36 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         cell.favoritesLabel.text = "\(favoritesInt)"
         
         return cell
+    }
+    
+    @IBAction func replyButtonTapped(_ sender: UIButton) {
+        
+    }
+    
+    @IBAction func retweetButtonTapped(_ sender: UIButton) {
+        let image1 = UIImage(named: "retweet-fill")
+        let image2 = UIImage(named: "retweet")
+        
+        if !retweetIsSelected{
+            retweetButtonIcon.setImage(image1, for: .normal)
+            retweetIsSelected = true
+        }else{
+            retweetButtonIcon.setImage(image2, for: .normal)
+            retweetIsSelected = false
+        }
+    }
+    
+    @IBAction func favoriteButtonTapped(_ sender: UIButton) {
+        let image1 = UIImage(named: "star-fill")
+        let image2 = UIImage(named: "star")
+        
+        if !favoriteIsSelected{
+            favoriteButtonIcon.setImage(image1, for: .normal)
+            favoriteIsSelected = true
+        }else{
+            favoriteButtonIcon.setImage(image2, for: .normal)
+            favoriteIsSelected = false
+        }
     }
     
     override func didReceiveMemoryWarning() {
