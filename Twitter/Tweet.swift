@@ -13,9 +13,17 @@ class Tweet: NSObject {
     var text: String?
     var name: String?
     var screenname: String?
+    var profileImageUrl: URL?
     var timestamp: Date?
+    var currTimeStamp: String?
+    var detailTimeStamp: String?
     var retweetCount: Int = 0
     var favoritesCount: Int  = 0
+    let currTime = Date()
+    var minutes:Int = 0
+    var hours: Int = 0
+    var days: Int = 0
+    var rawTime:Int = 0
     
     init(dictionary: NSDictionary){
         let user = dictionary["user"] as! NSDictionary
@@ -23,7 +31,10 @@ class Tweet: NSObject {
         name  = user["name"] as? String
         screenname = "@\(user["screen_name"] ?? "")"
         text = dictionary["text"] as? String
-        
+        let profileImageString = user["profile_image_url"] as? String
+        if let profileImageString = profileImageString{
+            profileImageUrl = URL(string: profileImageString)
+        }
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
         favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
         
@@ -33,7 +44,28 @@ class Tweet: NSObject {
             let formatter = DateFormatter()
             formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
             timestamp = formatter.date(from: timestampString)
+            detailTimeStamp = DateFormatter.localizedString(from: timestamp!, dateStyle: .short, timeStyle: .short)
         }
+        
+        rawTime = Int(currTime.timeIntervalSince(timestamp!))
+        minutes = rawTime/60
+        hours = rawTime/3600
+        days = rawTime/86400
+        
+        if rawTime < 60{
+            currTimeStamp = "\(rawTime)s"
+        }else if rawTime >= 60{
+            if rawTime < 3600{
+               currTimeStamp = "\(minutes)m"
+            }
+        }else if rawTime >= 3600{
+            if rawTime < 86400{
+                currTimeStamp = "\(hours)h"
+            }
+        }else{
+            currTimeStamp = timestamp?.description
+        }
+
         
     }
     
