@@ -17,6 +17,7 @@ class Tweet: NSObject {
     var timestamp: Date?
     var currTimeStamp: String?
     var detailTimeStamp: String?
+    var tweet_id: String?
     var retweetCount: Int = 0
     var favoritesCount: Int  = 0
     let currTime = Date()
@@ -35,8 +36,9 @@ class Tweet: NSObject {
         if let profileImageString = profileImageString{
             profileImageUrl = URL(string: profileImageString)
         }
+        tweet_id = dictionary["id_str"] as? String
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
-        favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
+        favoritesCount = (user["favourites_count"] as? Int) ?? 0
         
         let timestampString = dictionary["created_at"] as? String
         
@@ -48,7 +50,6 @@ class Tweet: NSObject {
         }
         
         rawTime = Int(currTime.timeIntervalSince(timestamp!))
-        print(rawTime)
         minutes = rawTime/60
         hours = rawTime/3600
         days = rawTime/86400
