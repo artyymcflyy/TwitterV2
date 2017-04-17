@@ -37,6 +37,7 @@ Please list two areas of the assignment you'd like to **discuss further with you
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
+The README is indicating that the length is too long to show. Here is the link: http://i.imgur.com/x1tejze.gif
 
 <img src='http://i.imgur.com/x1tejze.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
