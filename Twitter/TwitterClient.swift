@@ -15,6 +15,7 @@ class TwitterClient: BDBOAuth1SessionManager {
     
     var loginSuccess: (() -> ())?
     var loginFailure: ((Error) -> ())?
+    var tweetTimelineCount = 20
     
     func login(success: @escaping ()->(), faliure: @escaping (Error)->()){
         loginSuccess = success
@@ -61,7 +62,7 @@ class TwitterClient: BDBOAuth1SessionManager {
     }
     
     func updateStatus(status: String, replyID: String, success:@escaping (Tweet)->(), failure: (Error)->()){
-        post("/1.1/statuses/update.json", parameters: ["status": status], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
+        post("/1.1/statuses/update.json", parameters: ["status": status, "in_reply_to_status_id": replyID], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
             let dictionary = response as! NSDictionary
             let tweet = Tweet(dictionary: dictionary)
             
@@ -74,9 +75,10 @@ class TwitterClient: BDBOAuth1SessionManager {
     
     func homeTimeLine(success: @escaping ([Tweet])->(), failure: (Error)->()){
         
-        get("/1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
+        get("/1.1/statuses/home_timeline.json", parameters: ["count":"\(tweetTimelineCount)"], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
             let dictionaries = response as! [NSDictionary]
             let tweets = Tweet.tweetsInArray(dictionaries: dictionaries)
+            self.tweetTimelineCount += 20
             
             success(tweets)
             
@@ -84,6 +86,36 @@ class TwitterClient: BDBOAuth1SessionManager {
             print("error \(error.localizedDescription)")
             self.loginFailure?(error)
         })
+    }
+    
+    func favoritedTweet(isCurrentlyFavorited: Bool, tweetID: String,success:@escaping (Bool)->(), failure:(Error)->()){
+        let resource = isCurrentlyFavorited ? "destroy" : "create"
+        
+        post("/1.1/favorites/"+resource+".json", parameters: ["id":tweetID], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
+            let dictionary = response as! NSDictionary
+            let favorited = dictionary["favorited"] as! Bool
+            
+            success(favorited)
+            
+        }) { (task:URLSessionDataTask?, error:Error) in
+            print("error \(error.localizedDescription )")
+        }
+    }
+    
+    func retweetTweet(isCurrentlyRetweeted: Bool, tweetID: String,success:@escaping (Bool)->(), failure:(Error)->()){
+        let resource = isCurrentlyRetweeted ? "unretweet" : "retweet"
+        post("/1.1/statuses/"+resource+"/"+tweetID+".json", parameters: ["id":tweetID], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
+            let dictionary = response as! NSDictionary
+            var retweeted = dictionary["retweeted"] as! Bool
+            
+            if dictionary["retweeted_status"] == nil{
+                retweeted = false
+            }
+            success(retweeted)
+            
+        }) { (task:URLSessionDataTask?, error:Error) in
+            print("error \(error.localizedDescription )")
+        }
     }
     
     func currentAccount(success:@escaping (User)->(), failure:@escaping (Error)->()){

@@ -20,7 +20,9 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var userProfileImageView: UIImageView!
     var count = 0
+    var labelCount = 0
     var tweetText = ""
+    var replyID = ""
     var delegate: NewTweetViewControllerDelegate?
     
     override func viewDidLoad() {
@@ -34,16 +36,18 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
         if User.currentUser?.profileUrl != nil{
             userProfileImageView.setImageWith((User.currentUser?.profileUrl)!)
         }
-        tweetTextArea.text = ""
+        tweetTextArea.text = tweetText
         
         tweetTextArea.becomeFirstResponder()
-        
+        count = tweetTextArea.text.characters.count
+        labelCount = 140-count
+        characterCount.text = "\(labelCount)"
     }
     
     func textViewDidChange(_ textView: UITextView) {
         count = textView.text.characters.count
         if count <= 140{
-            let labelCount = 140-count
+            labelCount = 140-count
             characterCount.text = "\(labelCount)"
             tweetText = textView.text.substring(to: textView.text.endIndex)
         }else{
@@ -52,7 +56,9 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func tweetButtonTapped(_ sender: UIBarButtonItem) {
-        TwitterClient.sharedInstance?.updateStatus(status: tweetText, replyID: "", success: { (myTweet:Tweet) in
+        TwitterClient.sharedInstance?.updateStatus(status: tweetText, replyID: replyID, success: { (myTweet:Tweet) in
+            self.replyID = ""
+            self.resignFirstResponder()
             self.dismiss(animated: true, completion: { 
                 self.delegate?.newTweetViewController!(NewTweetViewController: self, didGetValue: myTweet)
             })
@@ -62,7 +68,8 @@ class NewTweetViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func onCancelTap(_ sender: UIBarButtonItem) {
-       dismiss(animated: true, completion: nil)
+        resignFirstResponder()
+        dismiss(animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {

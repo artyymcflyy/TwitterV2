@@ -11,6 +11,11 @@ import UIKit
 class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var favoriteButtonIcon: UIButton!
+    @IBOutlet var retweetButtonIcon: UIButton!
+    
+    var retweetIsSelected = false
+    var favoriteIsSelected = false
     var tweet: Tweet?
     
     override func viewDidLoad() {
@@ -20,6 +25,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
+        
         
         // Do any additional setup after loading the view.
     }
@@ -51,20 +57,86 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         return cell
     }
     
+    @IBAction func retweetButtonTapped(_ sender: UIButton) {
+        let image1 = UIImage(named: "retweet-fill")
+        let image2 = UIImage(named: "retweet")
+        
+        TwitterClient.sharedInstance?.retweetTweet(isCurrentlyRetweeted: retweetIsSelected, tweetID: (tweet?.tweet_id)!, success: { (isRetweeted:Bool) in
+            
+            self.retweetIsSelected = isRetweeted
+            if self.retweetIsSelected{
+                
+                self.tweet?.retweetCount += 1
+                self.retweetButtonIcon.setImage(image1, for: .normal)
+                
+            }else{
+                
+                self.tweet?.retweetCount -= 1
+                self.retweetButtonIcon.setImage(image2, for: .normal)
+                
+            }
+            
+            self.tableView.reloadData()
+            
+        }, failure: { (error:Error) in
+                print("error \(error.localizedDescription)")
+        })
+    }
+    
+    @IBAction func favoriteButtonTapped(_ sender: UIButton) {
+        let image1 = UIImage(named: "star-fill")
+        let image2 = UIImage(named: "star")
+        
+        TwitterClient.sharedInstance?.favoritedTweet(isCurrentlyFavorited: favoriteIsSelected, tweetID: (tweet?.tweet_id)!, success: { (isFavorited:Bool) in
+            
+            self.favoriteIsSelected = isFavorited
+            
+            if self.favoriteIsSelected{
+                
+                self.tweet?.favoritesCount += 1
+                self.favoriteButtonIcon.setImage(image1, for: .normal)
+                
+            }else{
+                
+                self.tweet?.favoritesCount -= 1
+                self.favoriteButtonIcon.setImage(image2, for: .normal)
+                
+            }
+            
+            self.tableView.reloadData()
+                
+        }, failure: { (error:Error) in
+            print("error \(error.localizedDescription)")
+        })
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
 
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "replyTweetModal"{
+            
+            let ntvc = segue.destination as! NewTweetViewController
+            
+            if tweet?.screenname != nil{
+                
+                let username = (tweet?.screenname)!
+                ntvc.tweetText = "\(username) "
+                
+            }
+            
+            if tweet?.tweet_id != nil{
+                
+                ntvc.replyID = (tweet?.tweet_id)!
+                
+            }
+        }
     }
-    */
 
 }
