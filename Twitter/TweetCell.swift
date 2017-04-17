@@ -10,12 +10,13 @@ import UIKit
 
 class TweetCell: UITableViewCell {
 
+    @IBOutlet var retweetedImageView: UIImageView!
+    @IBOutlet var retweetedUsernameLabel: UILabel!
     @IBOutlet var timestampLabel: UILabel!
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var profileImageView: UIImageView!
     @IBOutlet var tweetLabel: UILabel!
-    @IBOutlet var retweetedView: UIView!
     @IBOutlet var timeStamp: UILabel!
     @IBOutlet var retweetCountLabel: UILabel!
     @IBOutlet var favoriteCountLabel: UILabel!
