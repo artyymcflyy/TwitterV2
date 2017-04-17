@@ -132,7 +132,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             self.retweetIsSelected = isRetweeted
             if self.retweetIsSelected{
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedRetweetCount += 1
+                    self.tweet?.retweetedRetweets += 1
                 }else{
                     self.tweet?.retweetCount += 1
                 }
@@ -141,7 +141,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             }else{
                 
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedRetweetCount -= 1
+                    self.tweet?.retweetedRetweets -= 1
                 }else{
                     self.tweet?.retweetCount -= 1
                 }
@@ -168,7 +168,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             
             if self.favoriteIsSelected{
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedFavoritesCount += 1
+                    self.tweet?.retweetedFavorites += 1
                 }else{
                     self.tweet?.favoritesCount += 1
                 }
@@ -177,7 +177,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             }else{
                 
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedFavoritesCount -= 1
+                    self.tweet?.retweetedFavorites -= 1
                 }else{
                     self.tweet?.favoritesCount -= 1
                 }

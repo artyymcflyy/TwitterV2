@@ -58,8 +58,6 @@ class Tweet: NSObject {
             retweetedRetweets = retweetedStatus?["retweet_count"] as? Int ?? 0
             retweetedFavorites = retweetedStatus?["favorite_count"] as? Int ?? 0
             retweet_id = retweetedStatus?["id_str"] as? String
-            retweetedRetweetCount = retweetedStatus?["retweet_count"] as? Int ?? 0
-            retweetedFavoritesCount = retweetedStatus?["favorite_count"] as? Int ?? 0
 
             let retweetedFromUser = retweetedStatus?["user"] as? NSDictionary
             retweetedUsername = "@\(retweetedFromUser?["screen_name"] as? String ?? "")"
