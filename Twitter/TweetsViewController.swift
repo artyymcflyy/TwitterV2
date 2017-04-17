@@ -86,7 +86,6 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell") as! TweetCell
-        //cell.retweetedView.removeFromSuperview()
         let tweet = tweets[indexPath.row]
         
         cell.nameLabel.text = tweet.name
@@ -99,6 +98,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         if cell.tweetLabel.text?.range(of: "RT") == nil{
             cell.retweetedUsernameLabel.removeFromSuperview()
             cell.retweetedImageView.removeFromSuperview()
+            
         }else{
             cell.contentView.addSubview(cell.retweetedImageView)
             cell.contentView.addSubview(cell.retweetedUsernameLabel)
@@ -128,7 +128,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             
             let horizontal4Contraints = NSLayoutConstraint(item: cell.retweetedUsernameLabel, attribute:
                 .trailingMargin, relatedBy: .lessThanOrEqual, toItem: cell.contentView,
-                      attribute: .trailingMargin, multiplier: 1.0, constant: -120)
+                      attribute: .trailingMargin, multiplier: 1.0, constant: -100)
             
             cell.retweetedImageView.frame.size.width = 21
             cell.retweetedImageView.frame.size.height = 22
@@ -140,8 +140,12 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             NSLayoutConstraint.activate([horizonalContraints, topContraints,horizontal2Contraints,horizontal3Contraints, horizontal4Contraints, alignContraints])
             
             cell.retweetedUsernameLabel.text = tweet.name! + " retweeted"
+            cell.tweetLabel.text = tweet.retweetedText
+            cell.nameLabel.text = tweet.retweetedName
+            cell.usernameLabel.text = tweet.retweetedUsername
+            cell.retweetCountLabel.text = "\(tweet.retweetedRetweets)"
+            cell.favoriteCountLabel.text = "\(tweet.retweetedFavorites)"
         }
-        
         if tweet.profileImageUrl != nil{
             cell.getImageFromURL(url: tweet.profileImageUrl!)
         }

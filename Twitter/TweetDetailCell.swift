@@ -17,6 +17,8 @@ class TweetDetailCell: UITableViewCell {
     @IBOutlet var timestamplabel: UILabel!
     @IBOutlet var tweetLabel: UILabel!
     @IBOutlet var usernameLabel: UILabel!
+    @IBOutlet var retweetedImageView: UIImageView!
+    @IBOutlet var retweetedUserNameLabel: UILabel!
     @IBOutlet var nameLabel: UILabel!
     
     

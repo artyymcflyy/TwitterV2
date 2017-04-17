@@ -18,9 +18,19 @@ class Tweet: NSObject {
     var currTimeStamp: String?
     var detailTimeStamp: String?
     var tweet_id: String?
+    var retweet_id: String?
     var retweeted: Bool?
+    var retweetedStatus: NSDictionary?
+    var retweetedText: String?
+    var retweetedUsername: String?
+    var retweetedName: String?
+    var retweetedProfileUrl: URL?
     var favorited: Bool?
+    var retweetedRetweets: Int = 0
+    var retweetedFavorites: Int = 0
+    var retweetedRetweetCount: Int = 0
     var retweetCount: Int = 0
+    var retweetedFavoritesCount: Int = 0
     var favoritesCount: Int  = 0
     let currTime = Date()
     var minutes:Int = 0
@@ -42,6 +52,21 @@ class Tweet: NSObject {
         
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
         retweeted = dictionary["retweeted"] as? Bool
+        retweetedStatus = dictionary["retweeted_status"] as? NSDictionary
+        if retweetedStatus != nil{
+            retweetedText = retweetedStatus?["text"] as? String
+            retweetedRetweets = retweetedStatus?["retweet_count"] as? Int ?? 0
+            retweetedFavorites = retweetedStatus?["favorite_count"] as? Int ?? 0
+            retweet_id = retweetedStatus?["id_str"] as? String
+            retweetedRetweetCount = retweetedStatus?["retweet_count"] as? Int ?? 0
+            retweetedFavoritesCount = retweetedStatus?["favorite_count"] as? Int ?? 0
+
+            let retweetedFromUser = retweetedStatus?["user"] as? NSDictionary
+            retweetedUsername = "@\(retweetedFromUser?["screen_name"] as? String ?? "")"
+            retweetedName = retweetedFromUser?["name"] as? String
+            retweetedProfileUrl = retweetedFromUser?["profile_image_url"] as? URL
+            
+        }
         
         favoritesCount = (dictionary["favorite_count"] as? Int) ?? 0
         favorited = dictionary["favorited"] as? Bool
