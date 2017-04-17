@@ -104,20 +104,6 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             cell.getImageFromURL(url: (tweet?.profileImageUrl!)!)
         }
         
-//        cell.retweetedView.removeFromSuperview()
-//        
-//        cell.nameLabel.text = tweet?.name
-//        cell.usernameLabel.text = tweet?.screenname
-//        if tweet?.profileImageUrl != nil{
-//            cell.getImageFromURL(url: (tweet?.profileImageUrl)!)
-//        }
-//        cell.tweetLabel.text = tweet?.text
-//        cell.timestamplabel.text = tweet?.detailTimeStamp
-//        let retweetInt = tweet?.retweetCount ?? 0
-//        let favoritesInt = tweet?.favoritesCount ?? 0
-//        cell.retweetsLabel.text = "\(retweetInt)"
-//        cell.favoritesLabel.text = "\(favoritesInt)"
-        
         return cell
     }
     
@@ -207,9 +193,8 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             let ntvc = segue.destination as! NewTweetViewController
             
             if tweet?.screenname != nil{
-                
-                let username = (tweet?.screenname)!
-                ntvc.tweetText = "\(username) "
+                let username = tweet?.retweetedUsername != nil ? tweet?.retweetedUsername : tweet?.screenname
+                ntvc.tweetText = "\(username ?? "") "
                 
             }
             
