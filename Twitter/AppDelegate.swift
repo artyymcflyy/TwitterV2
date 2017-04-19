@@ -18,18 +18,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let containerViewController = storyBoard.instantiateViewController(withIdentifier: "ContainerVC") as! ContainerViewController
+        
+        window?.addSubview(containerViewController.view)
+        
         if User.currentUser != nil{
-            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyBoard.instantiateViewController(withIdentifier: "TweetsNavigationController")
+            let menuViewController = storyBoard.instantiateViewController(withIdentifier: "MenuVC") as! MenuViewController
             
-            window?.rootViewController = vc
+            menuViewController.containerViewController = containerViewController
+            containerViewController.menuViewController = menuViewController
+            
+            window?.rootViewController = containerViewController
         }
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: User.userDidLogoutNotification), object: nil, queue: OperationQueue.main) { (Notification) in
-            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyBoard.instantiateInitialViewController()
             
-            self.window?.rootViewController = vc
+            self.window?.rootViewController = storyBoard.instantiateViewController(withIdentifier: "LoginVC") as! LoginViewController
         }
         
         return true
@@ -60,6 +66,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         
         TwitterClient.sharedInstance?.handleOpenUrl(url: url)
+        
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let menuViewController = storyBoard.instantiateViewController(withIdentifier: "MenuVC") as! MenuViewController
+        let containerViewController = storyBoard.instantiateViewController(withIdentifier: "ContainerVC") as! ContainerViewController
+        
+        window?.rootViewController?.present(containerViewController, animated: false, completion: nil)
+        
+        menuViewController.containerViewController = containerViewController
+        containerViewController.menuViewController = menuViewController
         
         return true
     }

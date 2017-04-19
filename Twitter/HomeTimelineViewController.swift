@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NewTweetViewControllerDelegate, UIScrollViewDelegate{
+class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NewTweetViewControllerDelegate, UIScrollViewDelegate{
     
     @IBOutlet var tableView: UITableView!
     var tweets: [Tweet]!
