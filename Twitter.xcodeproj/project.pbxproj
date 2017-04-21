@@ -12,7 +12,7 @@
 		C637FE7B1EA9915A00E4EE33 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C637FE791EA9915A00E4EE33 /* Profile.storyboard */; };
 		C637FE7D1EA991AB00E4EE33 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C637FE7C1EA991AB00E4EE33 /* UserProfileViewController.swift */; };
 		C637FE801EA99B0F00E4EE33 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C637FE7E1EA99B0F00E4EE33 /* Main.storyboard */; };
-		C637FE831EA9A4DC00E4EE33 /* Timeline.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C637FE811EA9A4DC00E4EE33 /* Timeline.storyboard */; };
+		C637FE891EAA45BE00E4EE33 /* TweetStream.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C637FE871EAA45BE00E4EE33 /* TweetStream.storyboard */; };
 		C63EC0DB1E9DA0AB0031F30A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C63EC0DA1E9DA0AB0031F30A /* AppDelegate.swift */; };
 		C63EC0E21E9DA0AB0031F30A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C63EC0E11E9DA0AB0031F30A /* Assets.xcassets */; };
 		C63EC0E51E9DA0AB0031F30A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C63EC0E31E9DA0AB0031F30A /* LaunchScreen.storyboard */; };
@@ -37,7 +37,7 @@
 		C637FE7A1EA9915A00E4EE33 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Profile.storyboard; sourceTree = "<group>"; };
 		C637FE7C1EA991AB00E4EE33 /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		C637FE7F1EA99B0F00E4EE33 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Twitter/Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		C637FE821EA9A4DC00E4EE33 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Timeline.storyboard; sourceTree = "<group>"; };
+		C637FE881EAA45BE00E4EE33 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/TweetStream.storyboard; sourceTree = "<group>"; };
 		C63EC0D71E9DA0AB0031F30A /* Twitter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Twitter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C63EC0DA1E9DA0AB0031F30A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C63EC0E11E9DA0AB0031F30A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -112,8 +112,8 @@
 				C6603A291E9E585A003F2795 /* View Controllers */,
 				C6603A281E9E584E003F2795 /* API */,
 				C637FE7E1EA99B0F00E4EE33 /* Main.storyboard */,
-				C637FE811EA9A4DC00E4EE33 /* Timeline.storyboard */,
 				C637FE791EA9915A00E4EE33 /* Profile.storyboard */,
+				C637FE871EAA45BE00E4EE33 /* TweetStream.storyboard */,
 				C63EC0E11E9DA0AB0031F30A /* Assets.xcassets */,
 				C63EC0E31E9DA0AB0031F30A /* LaunchScreen.storyboard */,
 				C63EC0E61E9DA0AB0031F30A /* Info.plist */,
@@ -225,9 +225,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C637FE891EAA45BE00E4EE33 /* TweetStream.storyboard in Resources */,
 				C63EC0E51E9DA0AB0031F30A /* LaunchScreen.storyboard in Resources */,
 				C637FE801EA99B0F00E4EE33 /* Main.storyboard in Resources */,
-				C637FE831EA9A4DC00E4EE33 /* Timeline.storyboard in Resources */,
 				C63EC0E21E9DA0AB0031F30A /* Assets.xcassets in Resources */,
 				C637FE7B1EA9915A00E4EE33 /* Profile.storyboard in Resources */,
 			);
@@ -325,12 +325,12 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
-		C637FE811EA9A4DC00E4EE33 /* Timeline.storyboard */ = {
+		C637FE871EAA45BE00E4EE33 /* TweetStream.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				C637FE821EA9A4DC00E4EE33 /* Base */,
+				C637FE881EAA45BE00E4EE33 /* Base */,
 			);
-			name = Timeline.storyboard;
+			name = TweetStream.storyboard;
 			sourceTree = "<group>";
 		};
 		C63EC0E31E9DA0AB0031F30A /* LaunchScreen.storyboard */ = {

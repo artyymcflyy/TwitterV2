@@ -21,7 +21,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
         
-        let timelineStoryboard = UIStoryboard(name: "Timeline", bundle: nil)
+        let timelineStoryboard = UIStoryboard(name: "TweetStream", bundle: nil)
         let profileStoryboard = UIStoryboard(name: "Profile", bundle: nil)
         
         let homeTimelimeNVC = timelineStoryboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
