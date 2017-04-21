@@ -21,10 +21,15 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let timelineStoryboard = UIStoryboard(name: "Timeline", bundle: nil)
+        let profileStoryboard = UIStoryboard(name: "Profile", bundle: nil)
         
-        let homeTimelimeNVC = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
+        let homeTimelimeNVC = timelineStoryboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
+        let userProfileNVC = profileStoryboard.instantiateViewController(withIdentifier: "UserProfileNVC")
         
+        viewControllers.append(userProfileNVC)
+        viewControllers.append(homeTimelimeNVC)
+        viewControllers.append(homeTimelimeNVC)
         viewControllers.append(homeTimelimeNVC)
         
         containerViewController.contentViewController = homeTimelimeNVC
@@ -32,7 +37,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 4
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -44,7 +49,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell") as! MenuCell
         
-        let titles = ["Home Timeline"]
+        let titles = ["Profile", "Timeline", "Mentions", "Accounts"]
         cell.menuItemLabel.text = titles[indexPath.row]
         
         return cell
