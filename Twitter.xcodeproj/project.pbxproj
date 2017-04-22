@@ -144,10 +144,10 @@
 				C63763CE1EA7B60800A4E335 /* ContainerViewController.swift */,
 				C6FDB6471EA792190097045C /* MenuViewController.swift */,
 				C63EC0EC1E9DAA460031F30A /* LoginViewController.swift */,
+				C637FE7C1EA991AB00E4EE33 /* UserProfileViewController.swift */,
 				C6603A301E9E772C003F2795 /* HomeTimelineViewController.swift */,
 				C6603A371EA055EB003F2795 /* TweetDetailViewController.swift */,
 				C69DDCEE1EA256F400AB6E57 /* NewTweetViewController.swift */,
-				C637FE7C1EA991AB00E4EE33 /* UserProfileViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";

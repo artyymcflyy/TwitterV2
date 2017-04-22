@@ -91,7 +91,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
         cell.nameLabel.text = tweet.name
         cell.usernameLabel.text = tweet.screenname
         cell.tweetLabel.text = tweet.text
-        cell.timestampLabel.text = tweet.currTimeStamp
+        cell.timestampLabel.text = tweet.generalTimeStamp
         cell.retweetCountLabel.text = "\(tweet.retweetCount)"
         cell.favoriteCountLabel.text = "\(tweet.favoritesCount)"
         
@@ -107,8 +107,8 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
             cell.tweetLabel.text = tweet.retweetedText
             cell.nameLabel.text = tweet.retweetedName
             cell.usernameLabel.text = tweet.retweetedUsername
-            cell.retweetCountLabel.text = "\(tweet.retweetedRetweets)"
-            cell.favoriteCountLabel.text = "\(tweet.retweetedFavorites)"
+            cell.retweetCountLabel.text = "\(tweet.retweetingUserRetweets)"
+            cell.favoriteCountLabel.text = "\(tweet.retweetingUserFavorites)"
         }
         
         if tweet.profileImageUrl != nil{

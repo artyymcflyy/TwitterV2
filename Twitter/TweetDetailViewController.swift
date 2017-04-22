@@ -61,8 +61,8 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             cell.tweetLabel.text = tweet?.retweetedText
             cell.nameLabel.text = tweet?.retweetedName
             cell.usernameLabel.text = tweet?.retweetedUsername
-            cell.retweetsLabel.text = "\(tweet?.retweetedRetweets ?? 0)"
-            cell.favoritesLabel.text = "\(tweet?.retweetedFavorites ?? 0)"
+            cell.retweetsLabel.text = "\(tweet?.retweetingUserRetweets ?? 0)"
+            cell.favoritesLabel.text = "\(tweet?.retweetingUserFavorites ?? 0)"
         }
         if tweet?.profileImageUrl != nil{
             cell.getImageFromURL(url: (tweet?.profileImageUrl!)!)
@@ -82,7 +82,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             self.retweetIsSelected = isRetweeted
             if self.retweetIsSelected{
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedRetweets += 1
+                    self.tweet?.retweetingUserRetweets += 1
                 }else{
                     self.tweet?.retweetCount += 1
                 }
@@ -91,7 +91,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             }else{
                 
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedRetweets -= 1
+                    self.tweet?.retweetingUserRetweets -= 1
                 }else{
                     self.tweet?.retweetCount -= 1
                 }
@@ -118,7 +118,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             
             if self.favoriteIsSelected{
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedFavorites += 1
+                    self.tweet?.retweetingUserFavorites += 1
                 }else{
                     self.tweet?.favoritesCount += 1
                 }
@@ -127,7 +127,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             }else{
                 
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedFavorites -= 1
+                    self.tweet?.retweetingUserFavorites -= 1
                 }else{
                     self.tweet?.favoritesCount -= 1
                 }
