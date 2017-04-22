@@ -180,8 +180,8 @@
                                             <outlet property="timestampLabel" destination="sOX-3y-swo" id="rFW-t8-HX9"/>
                                             <outlet property="topProfileImageConstraint" destination="cME-YQ-ZQM" id="XVh-D3-WFz"/>
                                             <outlet property="topRetweetedViewConstraint" destination="98F-IQ-cfV" id="l8A-Ut-Ulw"/>
-                                            <outlet property="tweetLabel" destination="If6-Wp-d5G" id="NHq-KK-Co7"/>
-                                            <outlet property="usernameLabel" destination="C5n-u6-tyv" id="B4K-Ah-1rr"/>
+                                            <outlet property="tweetLabel" destination="If6-Wp-d5G" id="xU5-PJ-HVS"/>
+                                            <outlet property="usernameLabel" destination="C5n-u6-tyv" id="Mm9-th-clL"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

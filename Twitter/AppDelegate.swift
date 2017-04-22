@@ -37,7 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             self.window?.rootViewController = storyBoard.instantiateViewController(withIdentifier: "LoginVC") as! LoginViewController
         }
-        
         return true
     }
 

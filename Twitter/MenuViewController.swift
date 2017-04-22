@@ -34,6 +34,16 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         containerViewController.contentViewController = homeTimelimeNVC
         
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: User.userScreenNameNotification), object: nil, queue: OperationQueue.main) { (Notification) in
+            
+            self.containerViewController.contentViewController = self.viewControllers[0]
+            
+            let val = Notification.object as! NSDictionary
+            
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: val["screen_name"])
+            
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -42,6 +52,10 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        if indexPath.row == 0{
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: User.currentUser?.screenName)
+        }
         
         containerViewController.contentViewController = viewControllers[indexPath.row]
     }

@@ -13,6 +13,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
     @IBOutlet var tableView: UITableView!
     var tweets: [Tweet]!
     var isMoreDataLoading = false
+    var indexOfImage = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +31,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
         refreshControl.addTarget(self, action: #selector(refreshAction(_:)), for: .valueChanged)
         tableView.insertSubview(refreshControl, at: 0)
         
-        TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets:[Tweet]) in
+        TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(success: { (tweets:[Tweet]) in
             self.tweets = tweets
             self.tableView.reloadData()
             
@@ -39,7 +40,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
     }
     
     func refreshAction(_ refreshControl: UIRefreshControl){
-        TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets:[Tweet]) in
+        TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(success: { (tweets:[Tweet]) in
             self.tweets = tweets
             self.tableView.reloadData()
             refreshControl.endRefreshing()
@@ -56,7 +57,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
                 
                 isMoreDataLoading = true
                 
-                TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets:[Tweet]) in
+                TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(success: { (tweets:[Tweet]) in
                     self.tweets = tweets
                     self.isMoreDataLoading = false
                     self.tableView.reloadData()
@@ -70,6 +71,14 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
     @IBAction func onLogout(_ sender: UIBarButtonItem) {
         TwitterClient.sharedInstance?.logout()
     }
+    
+    func didTapUserProfileImage(_ sender: UITapGestureRecognizer, screen_name: String) {
+
+        let screen_name = tweets[(sender.view?.tag)!].retweetedUsername == nil ? tweets[(sender.view?.tag)!].screenname! : tweets[(sender.view?.tag)!].retweetedUsername!
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.userScreenNameNotification), object: ["screen_name": screen_name])
+    }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tweets != nil{
@@ -111,8 +120,13 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
             cell.favoriteCountLabel.text = "\(tweet.retweetingUserFavorites)"
         }
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUserProfileImage(_: screen_name:)))
+        
         if tweet.profileImageUrl != nil{
             cell.getImageFromURL(url: tweet.profileImageUrl!)
+            cell.profileImageView.addGestureRecognizer(tapGesture)
+            cell.profileImageView.isUserInteractionEnabled = true
+            cell.profileImageView.tag = indexPath.row
         }
         
         return cell

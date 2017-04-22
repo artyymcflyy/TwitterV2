@@ -30,6 +30,12 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         // Do any additional setup after loading the view.
     }
     
+    func didTapUserProfileImage(_ sender: UITapGestureRecognizer) {
+        let screen_name = tweet?.retweetedUsername == nil ? tweet?.screenname! : tweet?.retweetedUsername!
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.userScreenNameNotification), object: ["screen_name": screen_name])
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
@@ -64,8 +70,15 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             cell.retweetsLabel.text = "\(tweet?.retweetingUserRetweets ?? 0)"
             cell.favoritesLabel.text = "\(tweet?.retweetingUserFavorites ?? 0)"
         }
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUserProfileImage(_:)))
+        
         if tweet?.profileImageUrl != nil{
             cell.getImageFromURL(url: (tweet?.profileImageUrl!)!)
+            
+            cell.profileImageView.addGestureRecognizer(tapGesture)
+            cell.profileImageView.isUserInteractionEnabled = true
+            cell.profileImageView.tag = indexPath.row
         }
         
         return cell
@@ -140,6 +153,10 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         }, failure: { (error:Error) in
             print("error \(error.localizedDescription)")
         })
+    }
+    
+    @IBAction func didTapUserProfileImageInDetailView(_ sender: UITapGestureRecognizer) {
+        print("hello")
     }
     
     override func didReceiveMemoryWarning() {

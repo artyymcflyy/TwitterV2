@@ -61,6 +61,19 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func getAnyUserProfileTimeline(screen_name: String, success:@escaping ([Tweet])->(), failure:(Error)->()){
+        get("/1.1/statuses/user_timeline/\(screen_name).json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
+            let dictionaries = response as! [NSDictionary]
+            let tweets = Tweet.tweetsInArray(dictionaries: dictionaries)
+            print(tweets.count)
+            success(tweets)
+            
+        }, failure: { (task:URLSessionDataTask?, error:Error) in
+            print("error \(error.localizedDescription)")
+            self.loginFailure?(error)
+        })
+    }
+    
     func updateStatus(status: String, replyID: String, success:@escaping (Tweet)->(), failure: (Error)->()){
         post("/1.1/statuses/update.json", parameters: ["status": status, "in_reply_to_status_id": replyID], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
             let dictionary = response as! NSDictionary
@@ -73,7 +86,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func homeTimeLine(success: @escaping ([Tweet])->(), failure: (Error)->()){
+    func getAuthenticatedUserTimeLine(success: @escaping ([Tweet])->(), failure: (Error)->()){
         
         get("/1.1/statuses/home_timeline.json", parameters: ["count":"\(tweetTimelineCount)"], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
             let dictionaries = response as! [NSDictionary]

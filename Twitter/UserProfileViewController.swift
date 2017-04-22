@@ -11,6 +11,7 @@ import UIKit
 class UserProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet var tableView: UITableView!
+    
     var tweets: [Tweet]!
 
     override func viewDidLoad() {
@@ -18,6 +19,24 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 100
+        
+        tweets = []
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: nil, queue: OperationQueue.main) { (Notification) in
+            
+            let screen_name = Notification.object as! String
+            
+            TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
+                self.tweets = userTweets
+            }, failure: { (error:Error) in
+                print("error: \(error.localizedDescription)")
+            })
+            
+        }
+        
     }
     
     @IBAction func onNewTweetTap(_ sender: UIBarButtonItem) {
@@ -27,12 +46,23 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         present(newTweetVC, animated: true, completion: nil)
     }
     
+    func didTapUserProfileImage(_ sender: UITapGestureRecognizer) {
+        let screen_name = tweets[(sender.view?.tag)!].retweetedUsername == nil ? tweets[(sender.view?.tag)!].screenname! : tweets[(sender.view?.tag)!].retweetedUsername!
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.userScreenNameNotification), object: ["screen_name": screen_name])
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tweets.count
+        if tweets != nil{
+            return tweets.count
+        }else{
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell") as! TweetCell
+
         let tweet = tweets[indexPath.row]
         
         cell.nameLabel.text = tweet.name
@@ -57,9 +87,13 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
             cell.retweetCountLabel.text = "\(tweet.retweetingUserRetweets)"
             cell.favoriteCountLabel.text = "\(tweet.retweetingUserFavorites)"
         }
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUserProfileImage(_:)))
         
         if tweet.profileImageUrl != nil{
             cell.getImageFromURL(url: tweet.profileImageUrl!)
+            cell.profileImageView.addGestureRecognizer(tapGesture)
+            cell.profileImageView.isUserInteractionEnabled = true
+            cell.profileImageView.tag = indexPath.row
         }
         
         return cell
