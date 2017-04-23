@@ -47,14 +47,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let userVC = userNVC.topViewController as! UserProfileViewController
             
             let screen_name = Notification.object as! String
-            TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
-                
-                userVC.tweets = userTweets
-                
-                containerViewController.contentViewController = userNVC
+            TwitterClient.sharedInstance?.getUser(screen_name: screen_name, success: { (user:User) in
+                userVC.user = user
+                TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
+                    
+                    userVC.tweets = userTweets
+                    containerViewController.contentViewController = userNVC
+                    
+                }, failure: { (error:Error) in
+                    print("error: \(error.localizedDescription)")
+                })
                 
             }, failure: { (error:Error) in
-                print("error: \(error.localizedDescription)")
+                print("\(error.localizedDescription)")
             })
             
         }
@@ -69,7 +74,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let type = Notification.object as! String
             
             TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(typeOfTimeline: type, success: { (tweets:[Tweet]) in
-                print(type)
                 timelineVC.tweets = tweets
                 timelineVC.typeOfTimeline = type
                 containerViewController.contentViewController = timelineNVC
