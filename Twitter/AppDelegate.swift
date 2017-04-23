@@ -42,17 +42,62 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: nil, queue: OperationQueue.main) { (Notification) in
             
             let storyBoardProfile = UIStoryboard(name: "Profile", bundle: nil)
-            let userVC = storyBoardProfile.instantiateViewController(withIdentifier: "UserProfileVC") as! UserProfileViewController
+            let userNVC = storyBoardProfile.instantiateViewController(withIdentifier: "UserProfileNVC") as! UINavigationController
+            
+            let userVC = userNVC.topViewController as! UserProfileViewController
             
             let screen_name = Notification.object as! String
-            TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
+            
+            if screen_name == User.currentUser?.screenName{
                 
-                userVC.tweets = userTweets
+                userVC.user = User.currentUser
                 
-                containerViewController.contentViewController = userVC
+                TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
+                    
+                    userVC.tweets = userTweets
+                    containerViewController.contentViewController = userNVC
+                    
+                }, failure: { (error:Error) in
+                    print("error: \(error.localizedDescription)")
+                })
+            }else{
+                
+                TwitterClient.sharedInstance?.getUser(screen_name: screen_name, success: { (user:User) in
+               
+                    userVC.user = user
+                
+                    TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
+                    
+                    userVC.tweets = userTweets
+                    containerViewController.contentViewController = userNVC
+                    
+                    }, failure: { (error:Error) in
+                        print("error: \(error.localizedDescription)")
+                    })
+                
+                }, failure: { (error:Error) in
+                    print("\(error.localizedDescription)")
+                })
+            }
+            
+        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "timeline"), object: nil, queue: OperationQueue.main) { (Notification) in
+            
+            let storyBoardProfile = UIStoryboard(name: "TweetStream", bundle: nil)
+            let timelineNVC = storyBoardProfile.instantiateViewController(withIdentifier: "TweetsNavigationController") as! UINavigationController
+            
+            let timelineVC = timelineNVC.topViewController as! HomeTimelineViewController
+            
+            let type = Notification.object as! String
+            
+            TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(typeOfTimeline: type, success: { (tweets:[Tweet]) in
+                timelineVC.tweets = tweets
+                timelineVC.typeOfTimeline = type
+                containerViewController.contentViewController = timelineNVC
                 
             }, failure: { (error:Error) in
-                print("error: \(error.localizedDescription)")
+                print("\(error.localizedDescription)")
             })
             
         }
@@ -91,10 +136,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let menuViewController = storyBoard.instantiateViewController(withIdentifier: "MenuVC") as! MenuViewController
         let containerViewController = storyBoard.instantiateViewController(withIdentifier: "ContainerVC") as! ContainerViewController
         
-        window?.rootViewController?.present(containerViewController, animated: false, completion: nil)
-        
         menuViewController.containerViewController = containerViewController
         containerViewController.menuViewController = menuViewController
+        
+        window?.rootViewController?.present(containerViewController, animated: false, completion: {
+            
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "timeline"), object: "home")
+        })
         
         return true
     }

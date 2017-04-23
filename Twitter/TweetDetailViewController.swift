@@ -32,7 +32,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
     
     func didTapUserProfileImage(_ sender: UITapGestureRecognizer) {
         let screen_name = tweet?.retweetedUsername == nil ? tweet?.screenname! : tweet?.retweetedUsername!
-        
+        print("hello")
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: screen_name)
     }
     
@@ -153,10 +153,6 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         }, failure: { (error:Error) in
             print("error \(error.localizedDescription)")
         })
-    }
-    
-    @IBAction func didTapUserProfileImageInDetailView(_ sender: UITapGestureRecognizer) {
-        print("hello")
     }
     
     override func didReceiveMemoryWarning() {

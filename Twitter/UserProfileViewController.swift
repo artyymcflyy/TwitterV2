@@ -11,9 +11,17 @@ import UIKit
 class UserProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var userProfileBannerImageView: UIImageView!
+    @IBOutlet var userProfileImageView: UIImageView!
+    @IBOutlet var userNameLabel: UILabel!
+    @IBOutlet var userScreenNameLabel: UILabel!
+    @IBOutlet var numberOfTweets: UILabel!
+    @IBOutlet var numberOfFollowing: UILabel!
+    @IBOutlet var numberOfFollowers: UILabel!
     
     var tweets: [Tweet]!
     var savedScreenName = ""
+    var user: User?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,16 +32,35 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
         
+        tableView.reloadData()
+        
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshAction(_:)), for: .valueChanged)
         
         tableView.insertSubview(refreshControl, at: 0)
+        
+        if let url = user?.profileUrl{
+            userProfileImageView.setImageWith(url)
+        }
+        
+        if let bannerUrl = user?.profileBannerUrl{
+            userProfileBannerImageView.setImageWith(bannerUrl)
+        }
+        userNameLabel.text = user?.name
+        userScreenNameLabel.text = user?.screenName
+        numberOfTweets.text = "\(user?.totalTweets ?? 0)"
+        numberOfFollowers.text = "\(user?.followers ?? 0)"
+        numberOfFollowing.text = "\(user?.following ?? 0)"
         
     }
     
     func refreshAction(_ refreshControl: UIRefreshControl){
         
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object:savedScreenName)
+    }
+    
+    @IBAction func onSignOutTapped(_ sender: UIBarButtonItem) {
+        TwitterClient.sharedInstance?.logout()
     }
     
     @IBAction func onNewTweetTap(_ sender: UIBarButtonItem) {
@@ -46,7 +73,7 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
     func didTapUserProfileImage(_ sender: UITapGestureRecognizer) {
         let screen_name = tweets[(sender.view?.tag)!].retweetedUsername == nil ? tweets[(sender.view?.tag)!].screenname! : tweets[(sender.view?.tag)!].retweetedUsername!
         savedScreenName = screen_name
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: ["screen_name": screen_name])
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: screen_name)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -55,6 +82,10 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         }else{
             return 0
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -78,6 +109,9 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
             cell.topProfileImageConstraint.constant = 32
             
             cell.retweetedUsernameLabel.text = tweet.name! + " retweeted"
+//            if tweet.name == User.currentUser?.screenName{
+//                cell.retweetImageView.setImage( UIImage(named: "retweet-fill"), for: .normal)
+//            }
             cell.tweetLabel.text = tweet.retweetedText
             cell.nameLabel.text = tweet.retweetedName
             cell.usernameLabel.text = tweet.retweetedUsername

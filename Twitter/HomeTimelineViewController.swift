@@ -14,6 +14,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
     var tweets: [Tweet]!
     var isMoreDataLoading = false
     var indexOfImage = 0
+    var typeOfTimeline = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +32,11 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
         refreshControl.addTarget(self, action: #selector(refreshAction(_:)), for: .valueChanged)
         tableView.insertSubview(refreshControl, at: 0)
         
-        TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(success: { (tweets:[Tweet]) in
+        if typeOfTimeline == ""{
+            typeOfTimeline = "home"
+        }
+        
+        TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(typeOfTimeline: typeOfTimeline, success: { (tweets:[Tweet]) in
             self.tweets = tweets
             self.tableView.reloadData()
             
@@ -40,7 +45,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
     }
     
     func refreshAction(_ refreshControl: UIRefreshControl){
-        TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(success: { (tweets:[Tweet]) in
+        TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(typeOfTimeline: typeOfTimeline, success: { (tweets:[Tweet]) in
             self.tweets = tweets
             self.tableView.reloadData()
             refreshControl.endRefreshing()
@@ -57,7 +62,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
                 
                 isMoreDataLoading = true
                 
-                TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(success: { (tweets:[Tweet]) in
+                TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(typeOfTimeline: typeOfTimeline, success: { (tweets:[Tweet]) in
                     self.tweets = tweets
                     self.isMoreDataLoading = false
                     self.tableView.reloadData()
@@ -90,7 +95,6 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        //performSegue(withIdentifiezr: "TweetDetail", sender: self)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

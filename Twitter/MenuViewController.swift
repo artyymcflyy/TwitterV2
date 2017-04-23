@@ -25,10 +25,12 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         let profileStoryboard = UIStoryboard(name: "Profile", bundle: nil)
         
         let homeTimelimeNVC = timelineStoryboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
+        let mentionTimelimeNVC = timelineStoryboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
         let userProfileNVC = profileStoryboard.instantiateViewController(withIdentifier: "UserProfileNVC")
         
         viewControllers.append(userProfileNVC)
         viewControllers.append(homeTimelimeNVC)
+        viewControllers.append(mentionTimelimeNVC)
         
         containerViewController.contentViewController = homeTimelimeNVC
 
@@ -41,8 +43,18 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if indexPath.row == 0{
+        switch indexPath.row {
+        case 0:
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: User.currentUser?.screenName)
+            break;
+        case 1:
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "timeline"), object: "home")
+            break;
+        case 2:
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "timeline"), object: "mentions")
+            break;
+        default:
+            print("")
         }
         
         containerViewController.contentViewController = viewControllers[indexPath.row]
