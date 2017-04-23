@@ -32,6 +32,8 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
         
+        tableView.reloadData()
+        
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshAction(_:)), for: .valueChanged)
         

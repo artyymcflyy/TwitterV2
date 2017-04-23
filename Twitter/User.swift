@@ -34,7 +34,6 @@ class User: NSObject {
         let profileBannerUrlString = dictionary["profile_banner_url"] as? String
         if let profileBannerUrlString = profileBannerUrlString{
             profileBannerUrl = URL(string: profileBannerUrlString as String)
-            print(profileBannerUrlString)
         }
         
         tagLine = dictionary["description"] as? String
