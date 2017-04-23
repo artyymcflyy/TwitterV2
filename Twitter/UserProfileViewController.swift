@@ -13,6 +13,7 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
     @IBOutlet var tableView: UITableView!
     
     var tweets: [Tweet]!
+    var savedScreenName = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,20 +24,16 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
         
-        tweets = []
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshAction(_:)), for: .valueChanged)
         
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: nil, queue: OperationQueue.main) { (Notification) in
-            
-            let screen_name = Notification.object as! String
-            
-            TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
-                self.tweets = userTweets
-            }, failure: { (error:Error) in
-                print("error: \(error.localizedDescription)")
-            })
-            
-        }
+        tableView.insertSubview(refreshControl, at: 0)
         
+    }
+    
+    func refreshAction(_ refreshControl: UIRefreshControl){
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object:savedScreenName)
     }
     
     @IBAction func onNewTweetTap(_ sender: UIBarButtonItem) {
@@ -48,8 +45,8 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
     
     func didTapUserProfileImage(_ sender: UITapGestureRecognizer) {
         let screen_name = tweets[(sender.view?.tag)!].retweetedUsername == nil ? tweets[(sender.view?.tag)!].screenname! : tweets[(sender.view?.tag)!].retweetedUsername!
-        
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.userScreenNameNotification), object: ["screen_name": screen_name])
+        savedScreenName = screen_name
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: ["screen_name": screen_name])
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -33,7 +33,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
     func didTapUserProfileImage(_ sender: UITapGestureRecognizer) {
         let screen_name = tweet?.retweetedUsername == nil ? tweet?.screenname! : tweet?.retweetedUsername!
         
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.userScreenNameNotification), object: ["screen_name": screen_name])
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: screen_name)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

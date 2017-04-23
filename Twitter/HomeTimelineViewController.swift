@@ -76,7 +76,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
 
         let screen_name = tweets[(sender.view?.tag)!].retweetedUsername == nil ? tweets[(sender.view?.tag)!].screenname! : tweets[(sender.view?.tag)!].retweetedUsername!
         
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.userScreenNameNotification), object: ["screen_name": screen_name])
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: screen_name)
     }
     
     

@@ -29,21 +29,9 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         viewControllers.append(userProfileNVC)
         viewControllers.append(homeTimelimeNVC)
-        viewControllers.append(homeTimelimeNVC)
-        viewControllers.append(homeTimelimeNVC)
         
         containerViewController.contentViewController = homeTimelimeNVC
-        
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: User.userScreenNameNotification), object: nil, queue: OperationQueue.main) { (Notification) in
-            
-            self.containerViewController.contentViewController = self.viewControllers[0]
-            
-            let val = Notification.object as! NSDictionary
-            
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: val["screen_name"])
-            
-        }
-        
+
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

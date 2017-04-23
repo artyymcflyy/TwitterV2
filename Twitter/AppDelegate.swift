@@ -22,10 +22,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let containerViewController = storyBoard.instantiateViewController(withIdentifier: "ContainerVC") as! ContainerViewController
         
+        let menuViewController = storyBoard.instantiateViewController(withIdentifier: "MenuVC") as! MenuViewController
+        
         window?.addSubview(containerViewController.view)
         
         if User.currentUser != nil{
-            let menuViewController = storyBoard.instantiateViewController(withIdentifier: "MenuVC") as! MenuViewController
             
             menuViewController.containerViewController = containerViewController
             containerViewController.menuViewController = menuViewController
@@ -37,6 +38,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             self.window?.rootViewController = storyBoard.instantiateViewController(withIdentifier: "LoginVC") as! LoginViewController
         }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: nil, queue: OperationQueue.main) { (Notification) in
+            
+            let storyBoardProfile = UIStoryboard(name: "Profile", bundle: nil)
+            let userVC = storyBoardProfile.instantiateViewController(withIdentifier: "UserProfileVC") as! UserProfileViewController
+            
+            let screen_name = Notification.object as! String
+            TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
+                
+                userVC.tweets = userTweets
+                
+                containerViewController.contentViewController = userVC
+                
+            }, failure: { (error:Error) in
+                print("error: \(error.localizedDescription)")
+            })
+            
+        }
+        
         return true
     }
 
