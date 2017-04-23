@@ -17,7 +17,8 @@ class TweetCell: UITableViewCell {
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var profileImageView: UIImageView!
-    
+    @IBOutlet var favoriteButton: UIButton!
+    @IBOutlet var retweetButton: UIButton!
     @IBOutlet var tweetLabel: UILabel!
     @IBOutlet var timeStamp: UILabel!
     @IBOutlet var retweetCountLabel: UILabel!
@@ -29,7 +30,6 @@ class TweetCell: UITableViewCell {
     }
     
     func getImageFromURL(url: URL){
-//        profileImageView.image = UIImage()
         profileImageView.setImageWith(url)
     }
 

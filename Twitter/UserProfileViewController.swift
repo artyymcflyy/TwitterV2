@@ -117,10 +117,19 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
             cell.topRetweetedViewConstraint.constant = 3.5
             cell.topProfileImageConstraint.constant = 32
             
-            cell.retweetedUsernameLabel.text = tweet.name! + " retweeted"
-            if tweet.name == User.currentUser?.screenName{
-                print("hello")
+            if tweet.screenname == User.currentUser?.screenName{
+                cell.retweetButton.setImage(UIImage(named: "retweet-fill") , for: .normal)
+                cell.retweetCountLabel.font = UIFont(name:"HelveticaNeue-Bold", size: 17.0)
+                cell.retweetCountLabel.textColor = UIColor.black
             }
+            
+            if tweet.isFavorited!{
+                cell.favoriteButton.setImage(UIImage(named: "star-fill") , for: .normal)
+                cell.favoriteCountLabel.font = UIFont(name:"HelveticaNeue-Bold", size: 17.0)
+                cell.favoriteCountLabel.textColor = UIColor.black
+            }
+            
+            cell.retweetedUsernameLabel.text = tweet.name! + " retweeted"
             cell.tweetLabel.text = tweet.retweetedText
             cell.nameLabel.text = tweet.retweetedName
             cell.usernameLabel.text = tweet.retweetedUsername

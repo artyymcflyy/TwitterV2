@@ -178,9 +178,11 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="favoriteButton" destination="dqE-19-ce4" id="GnP-Sb-vOo"/>
                                             <outlet property="favoriteCountLabel" destination="axB-aX-fD0" id="YgG-qB-gh1"/>
                                             <outlet property="nameLabel" destination="RJt-CK-m0C" id="Lbq-XD-Q0v"/>
                                             <outlet property="profileImageView" destination="Mn0-Ey-bFM" id="YUa-Ug-pqG"/>
+                                            <outlet property="retweetButton" destination="pVN-zM-9dE" id="bHb-1S-afY"/>
                                             <outlet property="retweetCountLabel" destination="qqN-0S-zJH" id="sd9-0z-2dU"/>
                                             <outlet property="retweetedUsernameLabel" destination="32Y-04-iht" id="uU8-XX-0Cm"/>
                                             <outlet property="timeStamp" destination="sOX-3y-swo" id="WDm-jA-hYl"/>
@@ -352,8 +354,8 @@
     </scenes>
     <resources>
         <image name="reply" width="64" height="64"/>
-        <image name="retweet" width="64" height="64"/>
-        <image name="retweet-fill" width="64" height="64"/>
+        <image name="retweet" width="50" height="50"/>
+        <image name="retweet-fill" width="48" height="48"/>
         <image name="star" width="64" height="64"/>
     </resources>
 </document>
