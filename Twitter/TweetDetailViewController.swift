@@ -30,6 +30,12 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         // Do any additional setup after loading the view.
     }
     
+    func didTapUserProfileImage(_ sender: UITapGestureRecognizer) {
+        let screen_name = tweet?.retweetedUsername == nil ? tweet?.screenname! : tweet?.retweetedUsername!
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: screen_name)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
@@ -50,58 +56,29 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         cell.timestamplabel.text = tweet?.detailTimeStamp
         
         if cell.tweetLabel.text?.range(of: "RT") == nil{
-            cell.retweetedUserNameLabel.removeFromSuperview()
-            cell.retweetedImageView.removeFromSuperview()
+            cell.topRetweetedViewConstraint.constant = -20
+            cell.topProfileImageConstraint.constant = 20
             
         }else{
-            cell.contentView.addSubview(cell.retweetedImageView)
-            cell.contentView.addSubview(cell.retweetedUserNameLabel)
-            
-            let horizonalContraints = NSLayoutConstraint(item: cell.retweetedImageView, attribute:
-                .leadingMargin, relatedBy: .equal, toItem: cell.contentView,
-                                attribute: .leadingMargin, multiplier: 1.0,
-                                constant: 44)
-            
-            let topContraints = NSLayoutConstraint(item: cell.retweetedImageView, attribute:
-                .top, relatedBy: .equal, toItem: cell.contentView,
-                      attribute: .top, multiplier: 1.0, constant: 2)
-            
-            let horizontal3Contraints = NSLayoutConstraint(item: cell.retweetedImageView, attribute:
-                .trailingMargin, relatedBy: .equal, toItem: cell.retweetedUserNameLabel,
-                                 attribute: .leadingMargin, multiplier: 1.0,
-                                 constant: -20)
-            
-            let alignContraints = NSLayoutConstraint(item: cell.retweetedUserNameLabel, attribute:
-                .centerY, relatedBy: .equal, toItem: cell.retweetedImageView,
-                          attribute: .centerY, multiplier: 1.0, constant: 0)
-            
-            let horizontal2Contraints = NSLayoutConstraint(item: cell.retweetedUserNameLabel, attribute:
-                .leadingMargin, relatedBy: .equal, toItem: cell.retweetedImageView,
-                                attribute: .trailingMargin, multiplier: 1.0,
-                                constant: 5)
-            
-            let horizontal4Contraints = NSLayoutConstraint(item: cell.retweetedUserNameLabel, attribute:
-                .trailingMargin, relatedBy: .lessThanOrEqual, toItem: cell.contentView,
-                                 attribute: .trailingMargin, multiplier: 1.0, constant: -100)
-            
-            cell.retweetedImageView.frame.size.width = 21
-            cell.retweetedImageView.frame.size.height = 22
-            
-            
-            cell.retweetedImageView.translatesAutoresizingMaskIntoConstraints = false
-            cell.retweetedUserNameLabel.translatesAutoresizingMaskIntoConstraints = false
-            
-            NSLayoutConstraint.activate([horizonalContraints, topContraints,horizontal2Contraints,horizontal3Contraints, horizontal4Contraints, alignContraints])
+            cell.topRetweetedViewConstraint.constant = 3.5
+            cell.topProfileImageConstraint.constant = 32
             
             cell.retweetedUserNameLabel.text = (tweet?.name!)! + " retweeted"
             cell.tweetLabel.text = tweet?.retweetedText
             cell.nameLabel.text = tweet?.retweetedName
             cell.usernameLabel.text = tweet?.retweetedUsername
-            cell.retweetsLabel.text = "\(tweet?.retweetedRetweets ?? 0)"
-            cell.favoritesLabel.text = "\(tweet?.retweetedFavorites ?? 0)"
+            cell.retweetsLabel.text = "\(tweet?.retweetingUserRetweets ?? 0)"
+            cell.favoritesLabel.text = "\(tweet?.retweetingUserFavorites ?? 0)"
         }
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUserProfileImage(_:)))
+        
         if tweet?.profileImageUrl != nil{
             cell.getImageFromURL(url: (tweet?.profileImageUrl!)!)
+            
+            cell.profileImageView.addGestureRecognizer(tapGesture)
+            cell.profileImageView.isUserInteractionEnabled = true
+            cell.profileImageView.tag = indexPath.row
         }
         
         return cell
@@ -118,7 +95,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             self.retweetIsSelected = isRetweeted
             if self.retweetIsSelected{
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedRetweets += 1
+                    self.tweet?.retweetingUserRetweets += 1
                 }else{
                     self.tweet?.retweetCount += 1
                 }
@@ -127,7 +104,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             }else{
                 
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedRetweets -= 1
+                    self.tweet?.retweetingUserRetweets -= 1
                 }else{
                     self.tweet?.retweetCount -= 1
                 }
@@ -154,7 +131,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             
             if self.favoriteIsSelected{
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedFavorites += 1
+                    self.tweet?.retweetingUserFavorites += 1
                 }else{
                     self.tweet?.favoritesCount += 1
                 }
@@ -163,7 +140,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             }else{
                 
                 if self.tweet?.retweet_id != nil{
-                    self.tweet?.retweetedFavorites -= 1
+                    self.tweet?.retweetingUserFavorites -= 1
                 }else{
                     self.tweet?.favoritesCount -= 1
                 }
@@ -176,6 +153,10 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         }, failure: { (error:Error) in
             print("error \(error.localizedDescription)")
         })
+    }
+    
+    @IBAction func didTapUserProfileImageInDetailView(_ sender: UITapGestureRecognizer) {
+        print("hello")
     }
     
     override func didReceiveMemoryWarning() {

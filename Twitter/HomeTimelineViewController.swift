@@ -13,6 +13,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
     @IBOutlet var tableView: UITableView!
     var tweets: [Tweet]!
     var isMoreDataLoading = false
+    var indexOfImage = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +31,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
         refreshControl.addTarget(self, action: #selector(refreshAction(_:)), for: .valueChanged)
         tableView.insertSubview(refreshControl, at: 0)
         
-        TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets:[Tweet]) in
+        TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(success: { (tweets:[Tweet]) in
             self.tweets = tweets
             self.tableView.reloadData()
             
@@ -39,7 +40,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
     }
     
     func refreshAction(_ refreshControl: UIRefreshControl){
-        TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets:[Tweet]) in
+        TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(success: { (tweets:[Tweet]) in
             self.tweets = tweets
             self.tableView.reloadData()
             refreshControl.endRefreshing()
@@ -56,7 +57,7 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
                 
                 isMoreDataLoading = true
                 
-                TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets:[Tweet]) in
+                TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(success: { (tweets:[Tweet]) in
                     self.tweets = tweets
                     self.isMoreDataLoading = false
                     self.tableView.reloadData()
@@ -70,6 +71,14 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
     @IBAction func onLogout(_ sender: UIBarButtonItem) {
         TwitterClient.sharedInstance?.logout()
     }
+    
+    func didTapUserProfileImage(_ sender: UITapGestureRecognizer, screen_name: String) {
+
+        let screen_name = tweets[(sender.view?.tag)!].retweetedUsername == nil ? tweets[(sender.view?.tag)!].screenname! : tweets[(sender.view?.tag)!].retweetedUsername!
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: screen_name)
+    }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tweets != nil{
@@ -91,63 +100,33 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
         cell.nameLabel.text = tweet.name
         cell.usernameLabel.text = tweet.screenname
         cell.tweetLabel.text = tweet.text
-        cell.timestampLabel.text = tweet.currTimeStamp
+        cell.timestampLabel.text = tweet.generalTimeStamp
         cell.retweetCountLabel.text = "\(tweet.retweetCount)"
         cell.favoriteCountLabel.text = "\(tweet.favoritesCount)"
         
         if cell.tweetLabel.text?.range(of: "RT") == nil{
-            cell.retweetedUsernameLabel.removeFromSuperview()
-            cell.retweetedImageView.removeFromSuperview()
+            cell.topRetweetedViewConstraint.constant = -20
+            cell.topProfileImageConstraint.constant = 20
             
         }else{
-            cell.contentView.addSubview(cell.retweetedImageView)
-            cell.contentView.addSubview(cell.retweetedUsernameLabel)
-            
-            let horizonalContraints = NSLayoutConstraint(item: cell.retweetedImageView, attribute:
-                .leadingMargin, relatedBy: .equal, toItem: cell.contentView,
-                                attribute: .leadingMargin, multiplier: 1.0,
-                                constant: 44)
-            
-            let topContraints = NSLayoutConstraint(item: cell.retweetedImageView, attribute:
-                .top, relatedBy: .equal, toItem: cell.contentView,
-                                 attribute: .top, multiplier: 1.0, constant: 2)
-            
-            let horizontal3Contraints = NSLayoutConstraint(item: cell.retweetedImageView, attribute:
-                .trailingMargin, relatedBy: .equal, toItem: cell.retweetedUsernameLabel,
-                                 attribute: .leadingMargin, multiplier: 1.0,
-                                 constant: -20)
-            
-            let alignContraints = NSLayoutConstraint(item: cell.retweetedUsernameLabel, attribute:
-                .centerY, relatedBy: .equal, toItem: cell.retweetedImageView,
-                      attribute: .centerY, multiplier: 1.0, constant: 0)
-            
-            let horizontal2Contraints = NSLayoutConstraint(item: cell.retweetedUsernameLabel, attribute:
-                .leadingMargin, relatedBy: .equal, toItem: cell.retweetedImageView,
-                                attribute: .trailingMargin, multiplier: 1.0,
-                                constant: 5)
-            
-            let horizontal4Contraints = NSLayoutConstraint(item: cell.retweetedUsernameLabel, attribute:
-                .trailingMargin, relatedBy: .lessThanOrEqual, toItem: cell.contentView,
-                      attribute: .trailingMargin, multiplier: 1.0, constant: -100)
-            
-            cell.retweetedImageView.frame.size.width = 21
-            cell.retweetedImageView.frame.size.height = 22
-            
-            
-            cell.retweetedImageView.translatesAutoresizingMaskIntoConstraints = false
-            cell.retweetedUsernameLabel.translatesAutoresizingMaskIntoConstraints = false
-            
-            NSLayoutConstraint.activate([horizonalContraints, topContraints,horizontal2Contraints,horizontal3Contraints, horizontal4Contraints, alignContraints])
+            cell.topRetweetedViewConstraint.constant = 3.5
+            cell.topProfileImageConstraint.constant = 32
             
             cell.retweetedUsernameLabel.text = tweet.name! + " retweeted"
             cell.tweetLabel.text = tweet.retweetedText
             cell.nameLabel.text = tweet.retweetedName
             cell.usernameLabel.text = tweet.retweetedUsername
-            cell.retweetCountLabel.text = "\(tweet.retweetedRetweets)"
-            cell.favoriteCountLabel.text = "\(tweet.retweetedFavorites)"
+            cell.retweetCountLabel.text = "\(tweet.retweetingUserRetweets)"
+            cell.favoriteCountLabel.text = "\(tweet.retweetingUserFavorites)"
         }
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUserProfileImage(_: screen_name:)))
+        
         if tweet.profileImageUrl != nil{
             cell.getImageFromURL(url: tweet.profileImageUrl!)
+            cell.profileImageView.addGestureRecognizer(tapGesture)
+            cell.profileImageView.isUserInteractionEnabled = true
+            cell.profileImageView.tag = indexPath.row
         }
         
         return cell

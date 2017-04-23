@@ -10,9 +10,10 @@ import UIKit
 
 class TweetCell: UITableViewCell {
 
-    @IBOutlet var retweetedImageView: UIImageView!
-    @IBOutlet var retweetedUsernameLabel: UILabel!
+    @IBOutlet var topRetweetedViewConstraint: NSLayoutConstraint!
+    @IBOutlet var topProfileImageConstraint: NSLayoutConstraint!
     @IBOutlet var timestampLabel: UILabel!
+    @IBOutlet var retweetedUsernameLabel: UILabel!
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var profileImageView: UIImageView!

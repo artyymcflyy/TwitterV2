@@ -11,7 +11,7 @@ import BDBOAuth1Manager
 
 class TwitterClient: BDBOAuth1SessionManager {
     
-    static let sharedInstance = TwitterClient(baseURL: URL(string: "https://api.twitter.com") , consumerKey: "tKkx1uJGfbhVrZA7JpQhJFDQh", consumerSecret: "UIq1Z2foJhlfRmV3kbFGebBs1vFhVYPOXW6XxCk4o6Mc41z7Xu")
+    static let sharedInstance = TwitterClient(baseURL: URL(string: "https://api.twitter.com") , consumerKey: "3IZT6elY0W2aqqd0RjxI4suHb", consumerSecret: "N2OKYBLYdQU2msjKg5lHJX29M7IcLCmrCg5jnHLOahdtaxSfbq")
     
     var loginSuccess: (() -> ())?
     var loginFailure: ((Error) -> ())?
@@ -61,6 +61,19 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func getAnyUserProfileTimeline(screen_name: String, success:@escaping ([Tweet])->(), failure:(Error)->()){
+        get("/1.1/statuses/user_timeline/\(screen_name).json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
+            let dictionaries = response as! [NSDictionary]
+            let tweets = Tweet.tweetsInArray(dictionaries: dictionaries)
+            
+            success(tweets)
+            
+        }, failure: { (task:URLSessionDataTask?, error:Error) in
+            print("error \(error.localizedDescription)")
+            self.loginFailure?(error)
+        })
+    }
+    
     func updateStatus(status: String, replyID: String, success:@escaping (Tweet)->(), failure: (Error)->()){
         post("/1.1/statuses/update.json", parameters: ["status": status, "in_reply_to_status_id": replyID], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
             let dictionary = response as! NSDictionary
@@ -73,7 +86,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func homeTimeLine(success: @escaping ([Tweet])->(), failure: (Error)->()){
+    func getAuthenticatedUserTimeLine(success: @escaping ([Tweet])->(), failure: (Error)->()){
         
         get("/1.1/statuses/home_timeline.json", parameters: ["count":"\(tweetTimelineCount)"], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
             let dictionaries = response as! [NSDictionary]

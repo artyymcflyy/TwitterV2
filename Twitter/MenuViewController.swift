@@ -21,22 +21,29 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let timelineStoryboard = UIStoryboard(name: "TweetStream", bundle: nil)
+        let profileStoryboard = UIStoryboard(name: "Profile", bundle: nil)
         
-        let homeTimelimeNVC = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
+        let homeTimelimeNVC = timelineStoryboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
+        let userProfileNVC = profileStoryboard.instantiateViewController(withIdentifier: "UserProfileNVC")
         
+        viewControllers.append(userProfileNVC)
         viewControllers.append(homeTimelimeNVC)
         
         containerViewController.contentViewController = homeTimelimeNVC
-        
+
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 4
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        if indexPath.row == 0{
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: User.currentUser?.screenName)
+        }
         
         containerViewController.contentViewController = viewControllers[indexPath.row]
     }
@@ -44,7 +51,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell") as! MenuCell
         
-        let titles = ["Home Timeline"]
+        let titles = ["Profile", "Timeline", "Mentions", "Accounts"]
         cell.menuItemLabel.text = titles[indexPath.row]
         
         return cell

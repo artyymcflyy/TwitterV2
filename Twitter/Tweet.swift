@@ -15,28 +15,21 @@ class Tweet: NSObject {
     var screenname: String?
     var profileImageUrl: URL?
     var timestamp: Date?
-    var currTimeStamp: String?
+    var generalTimeStamp: String?
     var detailTimeStamp: String?
     var tweet_id: String?
     var retweet_id: String?
-    var retweeted: Bool?
-    var retweetedStatus: NSDictionary?
+    var retweetCount: Int = 0
+    var favoritesCount: Int  = 0
+    var isRetweeted: Bool?
+    var retweetedStatusInResponse: NSDictionary?
     var retweetedText: String?
     var retweetedUsername: String?
     var retweetedName: String?
     var retweetedProfileUrl: URL?
-    var favorited: Bool?
-    var retweetedRetweets: Int = 0
-    var retweetedFavorites: Int = 0
-    var retweetedRetweetCount: Int = 0
-    var retweetCount: Int = 0
-    var retweetedFavoritesCount: Int = 0
-    var favoritesCount: Int  = 0
-    let currTime = Date()
-    var minutes:Int = 0
-    var hours: Int = 0
-    var days: Int = 0
-    var rawTime:Int = 0
+    var retweetingUserRetweets: Int = 0
+    var retweetingUserFavorites: Int = 0
+    var retweetingUserRetweetCount: Int = 0
     
     init(dictionary: NSDictionary){
         let user = dictionary["user"] as! NSDictionary
@@ -51,15 +44,15 @@ class Tweet: NSObject {
         tweet_id = dictionary["id_str"] as? String
         
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
-        retweeted = dictionary["retweeted"] as? Bool
-        retweetedStatus = dictionary["retweeted_status"] as? NSDictionary
-        if retweetedStatus != nil{
-            retweetedText = retweetedStatus?["text"] as? String
-            retweetedRetweets = retweetedStatus?["retweet_count"] as? Int ?? 0
-            retweetedFavorites = retweetedStatus?["favorite_count"] as? Int ?? 0
-            retweet_id = retweetedStatus?["id_str"] as? String
+        isRetweeted = dictionary["retweeted"] as? Bool
+        retweetedStatusInResponse = dictionary["retweeted_status"] as? NSDictionary
+        if retweetedStatusInResponse != nil{
+            retweetedText = retweetedStatusInResponse?["text"] as? String
+            retweetingUserRetweets = retweetedStatusInResponse?["retweet_count"] as? Int ?? 0
+            retweetingUserFavorites = retweetedStatusInResponse?["favorite_count"] as? Int ?? 0
+            retweet_id = retweetedStatusInResponse?["id_str"] as? String
 
-            let retweetedFromUser = retweetedStatus?["user"] as? NSDictionary
+            let retweetedFromUser = retweetedStatusInResponse?["user"] as? NSDictionary
             retweetedUsername = "@\(retweetedFromUser?["screen_name"] as? String ?? "")"
             retweetedName = retweetedFromUser?["name"] as? String
             retweetedProfileUrl = retweetedFromUser?["profile_image_url"] as? URL
@@ -67,7 +60,7 @@ class Tweet: NSObject {
         }
         
         favoritesCount = (dictionary["favorite_count"] as? Int) ?? 0
-        favorited = dictionary["favorited"] as? Bool
+        //let isFavorited = dictionary["favorited"] as? Bool
         
         let timestampString = dictionary["created_at"] as? String
         
@@ -78,26 +71,27 @@ class Tweet: NSObject {
             detailTimeStamp = DateFormatter.localizedString(from: timestamp!, dateStyle: .short, timeStyle: .short)
         }
         
-        rawTime = Int(currTime.timeIntervalSince(timestamp!))
-        minutes = rawTime/60
-        hours = rawTime/3600
-        days = rawTime/86400
+        let currTime = Date()
+        
+        let rawTime = Int(currTime.timeIntervalSince(timestamp!))
+        let minutes = rawTime/60
+        let hours = rawTime/3600
         
         if rawTime < 60{
-            currTimeStamp = "\(rawTime)s"
+            generalTimeStamp = "\(rawTime)s"
         }
         if rawTime >= 60{
             if rawTime < 3600{
-               currTimeStamp = "\(minutes)m"
+               generalTimeStamp = "\(minutes)m"
             }
         }
         if rawTime >= 3600{
             if rawTime < 86400{
-                currTimeStamp = "\(hours)h"
+                generalTimeStamp = "\(hours)h"
             }
         }
         if rawTime >= 86400{
-            currTimeStamp = timestamp?.description
+            generalTimeStamp = timestamp?.description
         }
 
         

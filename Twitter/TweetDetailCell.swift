@@ -10,6 +10,8 @@ import UIKit
 
 class TweetDetailCell: UITableViewCell {
     
+    @IBOutlet var topProfileImageConstraint: NSLayoutConstraint!
+    @IBOutlet var topRetweetedViewConstraint: NSLayoutConstraint!
     @IBOutlet var retweetedView: UIView!
     @IBOutlet var profileImageView: UIImageView!
     @IBOutlet var favoritesLabel: UILabel!
