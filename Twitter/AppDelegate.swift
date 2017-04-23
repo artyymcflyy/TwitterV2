@@ -47,8 +47,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let userVC = userNVC.topViewController as! UserProfileViewController
             
             let screen_name = Notification.object as! String
-            TwitterClient.sharedInstance?.getUser(screen_name: screen_name, success: { (user:User) in
-                userVC.user = user
+            
+            if screen_name == User.currentUser?.screenName{
+                
+                userVC.user = User.currentUser
+                
                 TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
                     
                     userVC.tweets = userTweets
@@ -57,10 +60,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }, failure: { (error:Error) in
                     print("error: \(error.localizedDescription)")
                 })
+            }else{
                 
-            }, failure: { (error:Error) in
-                print("\(error.localizedDescription)")
-            })
+                TwitterClient.sharedInstance?.getUser(screen_name: screen_name, success: { (user:User) in
+               
+                    userVC.user = user
+                
+                    TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
+                    
+                    userVC.tweets = userTweets
+                    containerViewController.contentViewController = userNVC
+                    
+                    }, failure: { (error:Error) in
+                        print("error: \(error.localizedDescription)")
+                    })
+                
+                }, failure: { (error:Error) in
+                    print("\(error.localizedDescription)")
+                })
+            }
             
         }
         
@@ -118,10 +136,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let menuViewController = storyBoard.instantiateViewController(withIdentifier: "MenuVC") as! MenuViewController
         let containerViewController = storyBoard.instantiateViewController(withIdentifier: "ContainerVC") as! ContainerViewController
         
-        window?.rootViewController?.present(containerViewController, animated: false, completion: nil)
-        
         menuViewController.containerViewController = containerViewController
         containerViewController.menuViewController = menuViewController
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "timeline"), object: "home")
+        
+        window?.rootViewController?.present(containerViewController, animated: false, completion: nil)
         
         return true
     }

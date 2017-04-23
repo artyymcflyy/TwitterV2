@@ -40,6 +40,10 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         if let url = user?.profileUrl{
             userProfileImageView.setImageWith(url)
         }
+        
+        if let bannerUrl = user?.profileBannerUrl{
+            userProfileBannerImageView.setImageWith(bannerUrl)
+        }
         userNameLabel.text = user?.name
         userScreenNameLabel.text = user?.screenName
         numberOfTweets.text = "\(user?.totalTweets ?? 0)"
@@ -51,6 +55,10 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
     func refreshAction(_ refreshControl: UIRefreshControl){
         
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object:savedScreenName)
+    }
+    
+    @IBAction func onSignOutTapped(_ sender: UIBarButtonItem) {
+        TwitterClient.sharedInstance?.logout()
     }
     
     @IBAction func onNewTweetTap(_ sender: UIBarButtonItem) {
@@ -99,6 +107,9 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
             cell.topProfileImageConstraint.constant = 32
             
             cell.retweetedUsernameLabel.text = tweet.name! + " retweeted"
+//            if tweet.name == User.currentUser?.screenName{
+//                cell.retweetImageView.setImage( UIImage(named: "retweet-fill"), for: .normal)
+//            }
             cell.tweetLabel.text = tweet.retweetedText
             cell.nameLabel.text = tweet.retweetedName
             cell.usernameLabel.text = tweet.retweetedUsername
