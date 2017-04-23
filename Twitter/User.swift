@@ -40,7 +40,7 @@ class User: NSObject {
         
         followers = dictionary["followers_count"] as? Int
         following = dictionary["friends_count"] as? Int
-        totalTweets = dictionary["stastuses_count"] as? Int
+        totalTweets = dictionary["statuses_count"] as? Int
         
     }
     

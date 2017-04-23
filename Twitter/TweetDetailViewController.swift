@@ -55,9 +55,18 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         cell.favoritesLabel.text = "\(tweet?.favoritesCount ?? 0)"
         cell.timestamplabel.text = tweet?.detailTimeStamp
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUserProfileImage(_:)))
+        
         if cell.tweetLabel.text?.range(of: "RT") == nil{
             cell.topRetweetedViewConstraint.constant = -20
             cell.topProfileImageConstraint.constant = 20
+            
+            if tweet?.profileImageUrl != nil{
+                cell.getImageFromURL(url: (tweet?.profileImageUrl!)!)
+                cell.profileImageView.addGestureRecognizer(tapGesture)
+                cell.profileImageView.isUserInteractionEnabled = true
+                cell.profileImageView.tag = indexPath.row
+            }
             
         }else{
             cell.topRetweetedViewConstraint.constant = 3.5
@@ -69,16 +78,14 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
             cell.usernameLabel.text = tweet?.retweetedUsername
             cell.retweetsLabel.text = "\(tweet?.retweetingUserRetweets ?? 0)"
             cell.favoritesLabel.text = "\(tweet?.retweetingUserFavorites ?? 0)"
-        }
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUserProfileImage(_:)))
-        
-        if tweet?.profileImageUrl != nil{
-            cell.getImageFromURL(url: (tweet?.profileImageUrl!)!)
             
-            cell.profileImageView.addGestureRecognizer(tapGesture)
-            cell.profileImageView.isUserInteractionEnabled = true
-            cell.profileImageView.tag = indexPath.row
+            if tweet?.retweetedProfileUrl != nil{
+                cell.getImageFromURL(url: (tweet?.retweetedProfileUrl!)!)
+                cell.profileImageView.addGestureRecognizer(tapGesture)
+                cell.profileImageView.isUserInteractionEnabled = true
+                cell.profileImageView.tag = indexPath.row
+            }
+            
         }
         
         return cell

@@ -108,9 +108,18 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
         cell.retweetCountLabel.text = "\(tweet.retweetCount)"
         cell.favoriteCountLabel.text = "\(tweet.favoritesCount)"
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUserProfileImage(_: screen_name:)))
+        
         if cell.tweetLabel.text?.range(of: "RT") == nil{
             cell.topRetweetedViewConstraint.constant = -20
             cell.topProfileImageConstraint.constant = 20
+            
+            if tweet.profileImageUrl != nil{
+                cell.getImageFromURL(url: tweet.profileImageUrl!)
+                cell.profileImageView.addGestureRecognizer(tapGesture)
+                cell.profileImageView.isUserInteractionEnabled = true
+                cell.profileImageView.tag = indexPath.row
+            }
             
         }else{
             cell.topRetweetedViewConstraint.constant = 3.5
@@ -122,16 +131,15 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
             cell.usernameLabel.text = tweet.retweetedUsername
             cell.retweetCountLabel.text = "\(tweet.retweetingUserRetweets)"
             cell.favoriteCountLabel.text = "\(tweet.retweetingUserFavorites)"
+            
+            if tweet.retweetedProfileUrl != nil{
+                cell.getImageFromURL(url: tweet.retweetedProfileUrl!)
+                cell.profileImageView.addGestureRecognizer(tapGesture)
+                cell.profileImageView.isUserInteractionEnabled = true
+                cell.profileImageView.tag = indexPath.row
+            }
         }
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUserProfileImage(_: screen_name:)))
-        
-        if tweet.profileImageUrl != nil{
-            cell.getImageFromURL(url: tweet.profileImageUrl!)
-            cell.profileImageView.addGestureRecognizer(tapGesture)
-            cell.profileImageView.isUserInteractionEnabled = true
-            cell.profileImageView.tag = indexPath.row
-        }
         
         return cell
     }

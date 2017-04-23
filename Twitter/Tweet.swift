@@ -55,7 +55,10 @@ class Tweet: NSObject {
             let retweetedFromUser = retweetedStatusInResponse?["user"] as? NSDictionary
             retweetedUsername = "@\(retweetedFromUser?["screen_name"] as? String ?? "")"
             retweetedName = retweetedFromUser?["name"] as? String
-            retweetedProfileUrl = retweetedFromUser?["profile_image_url"] as? URL
+            let retweetedProfileUrlString = retweetedFromUser?["profile_image_url"]
+            if let retweetedProfileUrlString = retweetedProfileUrlString{
+                retweetedProfileUrl = URL(string: retweetedProfileUrlString as! String)
+            }
             
         }
         

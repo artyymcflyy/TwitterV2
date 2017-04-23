@@ -182,7 +182,6 @@
                                             <outlet property="nameLabel" destination="RJt-CK-m0C" id="Lbq-XD-Q0v"/>
                                             <outlet property="profileImageView" destination="Mn0-Ey-bFM" id="YUa-Ug-pqG"/>
                                             <outlet property="retweetCountLabel" destination="qqN-0S-zJH" id="sd9-0z-2dU"/>
-                                            <outlet property="retweetImageView" destination="pVN-zM-9dE" id="EKu-cn-mrf"/>
                                             <outlet property="retweetedUsernameLabel" destination="32Y-04-iht" id="uU8-XX-0Cm"/>
                                             <outlet property="timeStamp" destination="sOX-3y-swo" id="WDm-jA-hYl"/>
                                             <outlet property="timestampLabel" destination="sOX-3y-swo" id="rFW-t8-HX9"/>
