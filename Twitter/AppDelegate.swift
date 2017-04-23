@@ -139,9 +139,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         menuViewController.containerViewController = containerViewController
         containerViewController.menuViewController = menuViewController
         
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "timeline"), object: "home")
-        
-        window?.rootViewController?.present(containerViewController, animated: false, completion: nil)
+        window?.rootViewController?.present(containerViewController, animated: false, completion: {
+            
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "timeline"), object: "home")
+        })
         
         return true
     }
