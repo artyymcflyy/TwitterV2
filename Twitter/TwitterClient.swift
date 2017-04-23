@@ -86,9 +86,9 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func getAuthenticatedUserTimeLine(success: @escaping ([Tweet])->(), failure: (Error)->()){
+    func getAuthenticatedUserTimeLine(typeOfTimeline: String, success: @escaping ([Tweet])->(), failure: (Error)->()){
         
-        get("/1.1/statuses/home_timeline.json", parameters: ["count":"\(tweetTimelineCount)"], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
+        get("/1.1/statuses/\(typeOfTimeline)_timeline.json", parameters: ["count":"\(tweetTimelineCount)"], progress: nil, success: { (task:URLSessionDataTask, response:Any?) in
             let dictionaries = response as! [NSDictionary]
             let tweets = Tweet.tweetsInArray(dictionaries: dictionaries)
             self.tweetTimelineCount += 20

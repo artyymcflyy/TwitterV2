@@ -42,17 +42,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: User.fetchUserProfileNotification), object: nil, queue: OperationQueue.main) { (Notification) in
             
             let storyBoardProfile = UIStoryboard(name: "Profile", bundle: nil)
-            let userVC = storyBoardProfile.instantiateViewController(withIdentifier: "UserProfileVC") as! UserProfileViewController
+            let userNVC = storyBoardProfile.instantiateViewController(withIdentifier: "UserProfileNVC") as! UINavigationController
+            
+            let userVC = userNVC.topViewController as! UserProfileViewController
             
             let screen_name = Notification.object as! String
             TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
                 
                 userVC.tweets = userTweets
                 
-                containerViewController.contentViewController = userVC
+                containerViewController.contentViewController = userNVC
                 
             }, failure: { (error:Error) in
                 print("error: \(error.localizedDescription)")
+            })
+            
+        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "timeline"), object: nil, queue: OperationQueue.main) { (Notification) in
+            
+            let storyBoardProfile = UIStoryboard(name: "TweetStream", bundle: nil)
+            let timelineNVC = storyBoardProfile.instantiateViewController(withIdentifier: "TweetsNavigationController") as! UINavigationController
+            
+            let timelineVC = timelineNVC.topViewController as! HomeTimelineViewController
+            
+            let type = Notification.object as! String
+            
+            TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(typeOfTimeline: type, success: { (tweets:[Tweet]) in
+                print(type)
+                timelineVC.tweets = tweets
+                timelineVC.typeOfTimeline = type
+                containerViewController.contentViewController = timelineNVC
+                
+            }, failure: { (error:Error) in
+                print("\(error.localizedDescription)")
             })
             
         }
