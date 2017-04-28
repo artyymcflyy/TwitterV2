@@ -10,6 +10,7 @@ import UIKit
 
 class UserProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    @IBOutlet var userProfileInfoView: UIView!
     @IBOutlet var tableView: UITableView!
     @IBOutlet var userProfileBannerImageView: UIImageView!
     @IBOutlet var userProfileImageView: UIImageView!
@@ -28,6 +29,10 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+       // userProfileInfoView.removeFromSuperview()
+        
+        tableView.register(UINib(nibName: "UserProfileView", bundle: nil), forHeaderFooterViewReuseIdentifier: "HeaderView")
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
@@ -146,6 +151,15 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "HeaderView")
+        
+        header?.backgroundColor = .blue
+        
+        return header
+        
     }
 
     override func didReceiveMemoryWarning() {

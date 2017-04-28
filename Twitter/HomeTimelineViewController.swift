@@ -36,12 +36,12 @@ class HomeTimelineViewController: UIViewController, UITableViewDataSource, UITab
             typeOfTimeline = "home"
         }
         
-        TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(typeOfTimeline: typeOfTimeline, success: { (tweets:[Tweet]) in
-            self.tweets = tweets
-            self.tableView.reloadData()
-            
-        }, failure: { (error:Error) in})
-        
+        if User.currentUser != nil{
+            TwitterClient.sharedInstance?.getAuthenticatedUserTimeLine(typeOfTimeline: typeOfTimeline, success: { (tweets:[Tweet]) in
+                self.tweets = tweets
+                self.tableView.reloadData()
+            }, failure: { (error:Error) in})
+        }
     }
     
     func refreshAction(_ refreshControl: UIRefreshControl){

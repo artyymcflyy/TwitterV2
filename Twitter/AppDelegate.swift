@@ -69,7 +69,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     TwitterClient.sharedInstance?.getAnyUserProfileTimeline(screen_name: screen_name, success: { (userTweets:[Tweet]) in
                     
                     userVC.tweets = userTweets
-                    containerViewController.contentViewController = userNVC
                     
                     }, failure: { (error:Error) in
                         print("error: \(error.localizedDescription)")
